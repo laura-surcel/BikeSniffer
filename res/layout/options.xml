@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- <ListView
+     xmlns:android="http://schemas.android.com/apk/res/android"
+     android:id="@+id/list"
+     android:layout_height="wrap_content"
+     android:layout_width="match_parent"
+     android:choiceMode="singleChoice"
+     android:background="#cccc"
+     android:divider="@android:color/transparent"
+     android:dividerHeight="0dp">
+</ListView> -->
+
+<RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="#cccc">
+    <RadioButton android:id="@+id/radio_pirates"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/option1"
+        android:onClick="onRadioButtonClicked"/>
+    <RadioButton android:id="@+id/radio_ninjas"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/option2"
+        android:onClick="onRadioButtonClicked"/>
+</RadioGroup>
