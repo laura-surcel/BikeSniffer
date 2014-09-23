@@ -1476,11 +1476,11 @@ containing a value of this type.
         public static final int action_bar_subtitle=0x7f080035;
         public static final int action_bar_title=0x7f080034;
         public static final int action_context_bar=0x7f08002f;
-        public static final int action_example=0x7f080055;
+        public static final int action_example=0x7f080054;
         public static final int action_menu_divider=0x7f080028;
         public static final int action_menu_presenter=0x7f080029;
         public static final int action_mode_close_button=0x7f080036;
-        public static final int action_settings=0x7f080054;
+        public static final int action_settings=0x7f080053;
         public static final int activity_chooser_view_content=0x7f080037;
         public static final int always=0x7f08001e;
         public static final int beginning=0x7f080023;
@@ -1524,8 +1524,6 @@ containing a value of this type.
         public static final int progress_circular=0x7f08002a;
         public static final int progress_horizontal=0x7f08002b;
         public static final int radio=0x7f080041;
-        public static final int radio_ninjas=0x7f080053;
-        public static final int radio_pirates=0x7f080052;
         public static final int sandbox=0x7f080008;
         public static final int satellite=0x7f080002;
         public static final int search_badge=0x7f080044;
@@ -1546,6 +1544,7 @@ containing a value of this type.
         public static final int split_action_bar=0x7f080030;
         public static final int strict_sandbox=0x7f080009;
         public static final int submit_area=0x7f08004b;
+        public static final int switch1=0x7f080052;
         public static final int tabMode=0x7f080015;
         public static final int terrain=0x7f080003;
         public static final int title=0x7f08003d;
@@ -1753,7 +1752,6 @@ containing a value of this type.
         public static final int navigation_drawer_close=0x7f07002c;
         public static final int navigation_drawer_open=0x7f07002b;
         public static final int option1=0x7f070030;
-        public static final int option2=0x7f070031;
         public static final int title_section1=0x7f070028;
         public static final int title_section2=0x7f070029;
         public static final int title_section3=0x7f07002a;

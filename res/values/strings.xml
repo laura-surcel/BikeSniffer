@@ -10,7 +10,6 @@
     <string name="action_example">Refresh</string>
     <string name="action_settings">Settings</string>
     <string name="my_location_activity">My location</string>
-	<string name="option1">Terrain Map</string>
-	<string name="option2">Satellite Map</string>
+	<string name="option1">Satellite Map</string>
 	
 </resources>

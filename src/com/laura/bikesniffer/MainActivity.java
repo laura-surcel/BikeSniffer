@@ -1,7 +1,6 @@
 package com.laura.bikesniffer;
 
-import com.google.android.gms.maps.GoogleMap;
-
+import android.R.id;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
@@ -9,8 +8,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.RadioButton;
 
 public class MainActivity extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks{
@@ -24,6 +21,7 @@ public class MainActivity extends ActionBarActivity
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
      */
     private CharSequence mTitle;
+    private int mCurrentId;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +36,8 @@ public class MainActivity extends ActionBarActivity
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
+        
+        mCurrentId = R.id.container;
     }
     
     @Override
@@ -112,25 +112,15 @@ public class MainActivity extends ActionBarActivity
                     .commit();
             return true;
         }
+        
         return super.onOptionsItemSelected(item);
     }
     
-    public void onRadioButtonClicked(View view) {
-        // Is the button now checked?
-        boolean checked = ((RadioButton)view).isChecked();
-        
-        // Check which radio button was clicked
-        switch(view.getId()) {
-            case R.id.radio_pirates:
-                if (checked)
-                    // Pirates are the best
-                	CustomMapFragment.getInstance(1).setMapType(GoogleMap.MAP_TYPE_TERRAIN);
-                break;
-            case R.id.radio_ninjas:
-                if (checked)
-                    // Ninjas rule
-                	CustomMapFragment.getInstance(1).setMapType(GoogleMap.MAP_TYPE_SATELLITE);
-                break;
-        }
+    @Override
+    public void onBackPressed()
+    {
+        super.onBackPressed();
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.popBackStack("views", 0);
     }
 }
