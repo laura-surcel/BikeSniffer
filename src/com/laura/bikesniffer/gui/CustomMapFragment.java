@@ -1,4 +1,6 @@
-package com.laura.bikesniffer;
+package com.laura.bikesniffer.gui;
+
+import java.util.List;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -23,6 +25,9 @@ import com.google.android.gms.maps.LocationSource;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.laura.bikesniffer.R;
+import com.laura.bikesniffer.online.HttpAsyncRequest;
+import com.laura.bikesniffer.online.MapUpdater;
 
 
 /**
@@ -81,6 +86,7 @@ public class CustomMapFragment extends Fragment {
 	private GoogleMap mMap;
 	private GeoPosition mPrevPosition;
 	private static CustomMapFragment mInstance;
+	private MapUpdater mMapUpdater;
 	
     /**
      * Returns a new instance of this fragment for the given section
@@ -120,6 +126,7 @@ public class CustomMapFragment extends Fragment {
         {
         	this.mLocationSource = new LongPressLocationSource();
         	this.setUpMapIfNeeded();
+        	this.connect();
         }
         
         return rootView;
@@ -136,7 +143,13 @@ public class CustomMapFragment extends Fragment {
             	setUpMap();
             }
         }
-    }   
+    }  
+    
+    private void connect()
+    {
+    	new HttpAsyncRequest(mActivity).execute();
+		mMapUpdater = new MapUpdater(mActivity, this);
+    }
     
     public final void makeUseOfNewLocation(Location location) {
     	LatLng loc = new LatLng(location.getLatitude(), location.getLongitude());
@@ -196,12 +209,34 @@ public class CustomMapFragment extends Fragment {
     public void refreshLocation()
     {
     	Log.d("LOCATION", "Refresh");
-    	
+    	new MapUpdater(mActivity, this).execute();
+    }
+    
+    public void populateMapWithLocations(List<GeoPosition> locations)
+    {
+    	Log.d("LOCATION", "populateMapWithLocations");
     	mPrevPosition = null;
     	if(mMap != null)
     	{
     		mMap.clear();
     	}
+    	
+    	for(int i = 0; i < locations.size(); ++i)
+    	{
+    		GeoPosition gp = locations.get(i);
+    		LatLng loc = new LatLng(gp.getLatitude(), gp.getLongitude());
+    		mMap.addMarker(new MarkerOptions().position(loc));
+    		
+    		if(mMap != null)
+    		{
+                mMap.animateCamera(CameraUpdateFactory.zoomOut());
+            }
+    	}
+    }
+    
+    public GeoPosition getPosition()
+    {
+    	return mPrevPosition;
     }
     
     @Override

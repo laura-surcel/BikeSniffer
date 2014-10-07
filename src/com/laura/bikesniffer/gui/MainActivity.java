@@ -1,4 +1,9 @@
-package com.laura.bikesniffer;
+package com.laura.bikesniffer.gui;
+
+import com.laura.bikesniffer.R;
+import com.laura.bikesniffer.R.layout;
+import com.laura.bikesniffer.R.menu;
+import com.laura.bikesniffer.R.string;
 
 import android.R.id;
 import android.os.Bundle;

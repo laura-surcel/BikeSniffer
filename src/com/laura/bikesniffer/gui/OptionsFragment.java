@@ -1,4 +1,4 @@
-package com.laura.bikesniffer;
+package com.laura.bikesniffer.gui;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -15,6 +15,9 @@ import android.widget.LinearLayout;
 import android.widget.Switch;
 
 import com.google.android.gms.maps.GoogleMap;
+import com.laura.bikesniffer.R;
+import com.laura.bikesniffer.R.id;
+import com.laura.bikesniffer.R.layout;
 
 public class OptionsFragment extends Fragment {
 	

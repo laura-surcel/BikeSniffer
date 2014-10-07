@@ -1,4 +1,4 @@
-package com.laura.bikesniffer;
+package com.laura.bikesniffer.gui;
 
 import com.google.android.gms.maps.model.*;
 
@@ -9,6 +9,16 @@ public class GeoPosition
 	public GeoPosition(LatLng latLng)
 	{
 		this.latLng = latLng;
+	}
+	
+	public double getLatitude()
+	{
+		return latLng.latitude;
+	}
+	
+	public double getLongitude()
+	{
+		return latLng.longitude;
 	}
 	
 	public double getDistanceInKmFrom(GeoPosition gp)

@@ -41,7 +41,7 @@
 		    android:value="AIzaSyDQ8RbSLD6Kb9PR9QBr_pVjYPN4Yy6RNY0" />
         
         <activity
-            android:name=".MainActivity"
+            android:name="com.laura.bikesniffer.gui.MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
