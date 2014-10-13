@@ -2,10 +2,7 @@ package com.laura.bikesniffer.gui;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,8 +13,6 @@ import android.widget.Switch;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.laura.bikesniffer.R;
-import com.laura.bikesniffer.R.id;
-import com.laura.bikesniffer.R.layout;
 
 public class OptionsFragment extends Fragment {
 	

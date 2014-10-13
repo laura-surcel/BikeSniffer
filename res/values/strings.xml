@@ -11,5 +11,7 @@
     <string name="action_settings">Settings</string>
     <string name="my_location_activity">My location</string>
 	<string name="option1">Satellite Map</string>
+	<string name="send">Send</string>
+	<string name="cancel">Cancel</string>
 	
 </resources>
