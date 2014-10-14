@@ -16,7 +16,7 @@ android.view.View.OnClickListener
 
 	public Activity c;
 	public Dialog d;
-	public Button yes, no;
+	public Button send, cancel;
 	
 	public CustomMessage(Activity a) 
 	{
@@ -30,25 +30,25 @@ android.view.View.OnClickListener
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.message);
-		yes = (Button) findViewById(R.id.btn_yes);
-		no = (Button) findViewById(R.id.btn_no);
-		yes.setOnClickListener(this);
-		no.setOnClickListener(this);
+		/*send = (Button) findViewById(R.id.btn_send);
+		cancel = (Button) findViewById(R.id.btn_cancel);
+		send.setOnClickListener(this);
+		cancel.setOnClickListener(this);*/
 	}
 	
 	@Override
 	public void onClick(View v) 
 	{
-		switch (v.getId()) 
+		/*switch (v.getId()) 
 		{
-			case R.id.btn_yes:
+			case R.id.btn_send:
 				Log.d("MarkerHandler", "send");
-			case R.id.btn_no:
+			case R.id.btn_cancel:
 				Log.d("MarkerHandler", "cancel");
 				break;
 			default:
 				break;
-		}
+		}*/
 		
 		dismiss();
 	}
