@@ -9,7 +9,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
-import android.widget.EditText;
 
 public class CustomMessage extends Dialog implements
 android.view.View.OnClickListener 
@@ -30,17 +29,11 @@ android.view.View.OnClickListener
 	{
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		setContentView(R.layout.dialog);
-		
-		/*EditText text = (EditText) findViewById(R.id.message);
-	    text.setText("Test");
-	    text.setCompoundDrawablesWithIntrinsicBounds(null, null,
-	                       c.getResources().getDrawable(R.drawable.dialog), null);*/
-		    
-		/*yes = (Button) findViewById(R.id.yes);
-		no = (Button) findViewById(R.id.no);
+		setContentView(R.layout.message);
+		yes = (Button) findViewById(R.id.btn_yes);
+		no = (Button) findViewById(R.id.btn_no);
 		yes.setOnClickListener(this);
-		no.setOnClickListener(this);*/
+		no.setOnClickListener(this);
 	}
 	
 	@Override
