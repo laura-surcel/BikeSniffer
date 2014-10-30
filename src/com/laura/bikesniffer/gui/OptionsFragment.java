@@ -40,11 +40,11 @@ public class OptionsFragment extends Fragment {
    	        	 Log.d("LOCATION", "satellite map view");
    	        	 if(isChecked)
    	        	 {
-   	        		 CustomMapFragment.getInstance(1).setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+   	        		 BikesFragment.getInstance(1).setMapType(GoogleMap.MAP_TYPE_SATELLITE);
    	        	 }
    	        	 else
    	        	 {
-   	        		 CustomMapFragment.getInstance(1).setMapType(GoogleMap.MAP_TYPE_NORMAL);
+   	        		 BikesFragment.getInstance(1).setMapType(GoogleMap.MAP_TYPE_NORMAL);
    	        	 }
    	         }     
 

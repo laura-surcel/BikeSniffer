@@ -1,14 +1,13 @@
 package com.laura.bikesniffer.gui;
 
-import com.laura.bikesniffer.R;
-
 import android.app.Activity;
 import android.app.Dialog;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+
+import com.laura.bikesniffer.R;
 
 public class CustomMessage extends Dialog implements
 android.view.View.OnClickListener 

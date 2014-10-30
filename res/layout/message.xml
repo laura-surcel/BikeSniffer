@@ -17,7 +17,6 @@
 	    	android:scrollbars="vertical"
 			android:textColor="@android:color/black"
 			android:background= "@drawable/dialog"
-			android:hint="Meet me"
 	/>    
 
     <!-- <LinearLayout

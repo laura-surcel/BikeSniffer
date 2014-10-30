@@ -7,12 +7,8 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import com.google.android.gms.maps.model.LatLng;
-import com.laura.bikesniffer.gui.GeoPosition;
 
 import android.content.Context;
 import android.util.Log;
@@ -20,18 +16,20 @@ import android.util.Log;
 public class SendMessageRequest extends HttpAsyncRequest
 {
 	String message;
+	String recipientId;
 
-	public SendMessageRequest(Context c, String message) 
+	public SendMessageRequest(Context c, String message, String recipient) 
 	{
 		super(c);
 		this.message = message;
+		this.recipientId = recipient;
 	}
 
-	protected String makeRequest() throws JSONException, IOException
+	protected String makeRequest()
 	{
 		try {
  			// URL
- 	        URL url = new URL("http://86.124.214.98:3128/position");
+ 	        URL url = new URL(serverUrl + "/message");
  	        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
  	        connection.setDoOutput(true);
  	        connection.setRequestMethod("POST");
@@ -39,7 +37,8 @@ public class SendMessageRequest extends HttpAsyncRequest
  	        // Body
  	        JSONObject json = new JSONObject();
  			json.put("msg", message);
- 			json.put("deviceId", deviceId);
+ 			json.put("senderId", deviceId);
+ 			json.put("receiverId", recipientId);
  			
  			// Send
  	        OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
@@ -64,7 +63,7 @@ public class SendMessageRequest extends HttpAsyncRequest
  	 			return connection.getResponseMessage();
  	        }
  	    } 
- 		catch (IOException e) 
+ 		catch (IOException | JSONException e) 
  		{
  	        return e.getMessage();
  	    }

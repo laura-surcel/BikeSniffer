@@ -6,6 +6,8 @@ public class GeoPosition
 {
 	private LatLng latLng;
 	
+	public String userId;
+	
 	public GeoPosition(LatLng latLng)
 	{
 		this.latLng = latLng;

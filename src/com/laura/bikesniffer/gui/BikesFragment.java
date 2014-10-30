@@ -22,17 +22,21 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.laura.bikesniffer.R;
-import com.laura.bikesniffer.online.HttpAsyncRequest;
-import com.laura.bikesniffer.online.MapUpdater;
+import com.laura.bikesniffer.online.ConnectionRequest;
+import com.laura.bikesniffer.online.MapUpdateRequest;
+import com.laura.bikesniffer.online.MessageRetrieverTask;
+import com.laura.bikesniffer.utils.UsersManager;
 
 
 /**
  * A placeholder fragment containing a simple view.
  */
-public class CustomMapFragment extends Fragment 
+public class BikesFragment extends Fragment 
 {
     /**
      * The fragment argument representing the section number for this
@@ -45,28 +49,30 @@ public class CustomMapFragment extends Fragment
 	private MarkerHandler mMarkerHandler;
 	private GoogleMap mMap;
 	private GeoPosition mPrevPosition;
-	private static CustomMapFragment mInstance;
+	private static BikesFragment sInstance;
 	private View mRootView;
 	private ViewGroup mPrevContainer;
+	private MessageRetrieverTask mMessageRetriever;
 	
     /**
      * Returns a new instance of this fragment for the given section
      * number.
      */
-    public static CustomMapFragment getInstance(int sectionNumber) {
+    public static BikesFragment getInstance(int sectionNumber) 
+    {
     	
-    	if (mInstance == null)
+    	if (sInstance == null)
     	{
-    		mInstance =  new CustomMapFragment();
+    		sInstance =  new BikesFragment();
     		Bundle args = new Bundle();
             args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-            mInstance.setArguments(args);
+            sInstance.setArguments(args);
     	}
     	
-        return mInstance;
+        return sInstance;
     }
     
-    public CustomMapFragment() {}
+    public BikesFragment() {}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -100,8 +106,9 @@ public class CustomMapFragment extends Fragment
     	            {
     	            	mLocationSource = new LongPressLocationSource();
     	            	mMarkerHandler = new MarkerHandler(mActivity);
+    	            	mMessageRetriever = new MessageRetrieverTask(mActivity, this);
     	            	setUpMapIfNeeded();
-    	            	connect();
+    	            	mMessageRetriever.startRepeatingTask();
     	            }
     	            mPrevContainer = container;
     	        } catch (InflateException e) {
@@ -112,25 +119,20 @@ public class CustomMapFragment extends Fragment
         return mRootView;
     }
     
-    public final void makeUseOfNewLocation(Location location) {
+    public final void makeUseOfNewLocation(Location location) 
+    {
     	LatLng loc = new LatLng(location.getLatitude(), location.getLongitude());
     	GeoPosition gp = new GeoPosition(loc);
-    	if( mPrevPosition != null)
-    	{
-    		Log.d("LOCATION", ""+gp.getDistanceInKmFrom(mPrevPosition));
-    	}
-    	
+    	    	
     	if( mPrevPosition == null || gp.getDistanceInKmFrom(mPrevPosition) > 0.5)
     	{
-    		mMap.addMarker(new MarkerOptions().position(loc));
-            if(mMap != null){
-            	//Log.d("LOCATION", "Animate");
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(loc, 16.0f));
-            }
+    		Marker marker = mMap.addMarker(new MarkerOptions().position(loc));
+    		marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_launcher));
+    		
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(loc, 16.0f));            
             mPrevPosition = gp;
     	}        
-    }
-    
+    }    
     
     public void setMapType(int type)
     {
@@ -140,31 +142,33 @@ public class CustomMapFragment extends Fragment
     	}
     }
     
-    public void refreshLocation()
+	public void refreshLocation()
     {
     	Log.d("LOCATION", "Refresh");
-    	new MapUpdater(mActivity, this).execute();
+    	new MapUpdateRequest(mActivity, this).execute();
     }
+	
+	public void showNewMessage(String msg)
+	{
+		CustomMessage popup = new CustomMessage(mActivity);
+		popup.show();
+	}
     
     public void populateMapWithLocations(List<GeoPosition> locations)
     {
-    	Log.d("LOCATION", "populateMapWithLocations");
     	mPrevPosition = null;
     	if(mMap != null)
     	{
     		mMap.clear();
+    		UsersManager.getInstance().clearHistory();
     	}
     	
     	for(int i = 0; i < locations.size(); ++i)
     	{
     		GeoPosition gp = locations.get(i);
     		LatLng loc = new LatLng(gp.getLatitude(), gp.getLongitude());
-    		mMap.addMarker(new MarkerOptions().position(loc));
-    		
-    		if(mMap != null)
-    		{
-                mMap.animateCamera(CameraUpdateFactory.zoomOut());
-            }
+    		Marker marker = mMap.addMarker(new MarkerOptions().position(loc));
+    		UsersManager.getInstance().addUserIdForMarker(gp.userId, marker.getId());
     	}
     }
     
@@ -174,23 +178,29 @@ public class CustomMapFragment extends Fragment
     }
     
     @Override
-    public void onAttach(Activity activity) {
+    public void onAttach(Activity activity) 
+    {
         super.onAttach(activity);
         mActivity = (ActionBarActivity)activity;
     }    
     
-    public void onPause() {
+    public void onPause() 
+    {
     	super.onPause();
         mLocationSource.onPause();
+        disconnect();    	
     }
     
-    public void onResume() {
+    public void onResume() 
+    {
     	super.onResume();
         setUpMapIfNeeded();
+        connect();
         mLocationSource.onResume();
     }
     
-    private void setUpMapIfNeeded() {
+    private void setUpMapIfNeeded() 
+    {
         // Do a null check to confirm that we have not already instantiated the map.
         if (mMap == null) {
             // Try to obtain the map from the SupportMapFragment.
@@ -205,7 +215,12 @@ public class CustomMapFragment extends Fragment
     
     private void connect()
     {
-    	new HttpAsyncRequest(mActivity).execute();
+    	new ConnectionRequest(mActivity, true).execute();
+    }
+    
+    private void disconnect()
+    {
+    	new ConnectionRequest(mActivity, false).execute();
     }
     
     private void setUpMap() {

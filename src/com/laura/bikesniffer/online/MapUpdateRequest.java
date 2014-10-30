@@ -17,26 +17,26 @@ import android.content.Context;
 import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
-import com.laura.bikesniffer.gui.CustomMapFragment;
+import com.laura.bikesniffer.gui.BikesFragment;
 import com.laura.bikesniffer.gui.GeoPosition;
 
-public class MapUpdater extends HttpAsyncRequest
+public class MapUpdateRequest extends HttpAsyncRequest
 {
-	private CustomMapFragment map;
+	private BikesFragment map;
 	private List<GeoPosition> locations;
 	
-	public MapUpdater(Context c, CustomMapFragment m)
+	public MapUpdateRequest(Context c, BikesFragment m)
 	{
 		super(c);
 		this.map = m;
 		this.locations = new Vector<GeoPosition>();
 	}
 	
-	protected String makeRequest() throws JSONException, IOException
+	protected String makeRequest()
 	{
 		try {
  			// URL
- 	        URL url = new URL("http://86.124.214.98:3128/position");
+ 	        URL url = new URL(serverUrl + "/position");
  	        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
  	        connection.setDoOutput(true);
  	        connection.setRequestMethod("POST");
@@ -46,6 +46,7 @@ public class MapUpdater extends HttpAsyncRequest
  			GeoPosition pos = map.getPosition();
  			json.put("lat", pos.getLatitude());
  			json.put("longit", pos.getLongitude());
+ 			json.put("radius", 100);
  			json.put("deviceId", deviceId);
  			
  			// Send
@@ -68,7 +69,9 @@ public class MapUpdater extends HttpAsyncRequest
 	 	       	for(int i = 0; i < array.length(); ++i)
 	 	       	{
 	 	       		JSONObject obj = array.getJSONObject(i);
-	 	       		locations.add(new GeoPosition(new LatLng(obj.getDouble("lat"), obj.getDouble("longit"))));
+	 	       		GeoPosition gp = new GeoPosition(new LatLng(obj.getDouble("lat"), obj.getDouble("longit")));
+	 	       		gp.userId = obj.getString("id");
+	 	       		locations.add(gp);
 	 	       	}
 	 	       	return body;
  	        } 
@@ -78,7 +81,7 @@ public class MapUpdater extends HttpAsyncRequest
  	 			return connection.getResponseMessage();
  	        }
  	    } 
- 		catch (IOException e) 
+ 		catch (IOException | JSONException e) 
  		{
  	        return e.getMessage();
  	    }
