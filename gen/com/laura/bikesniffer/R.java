@@ -1463,25 +1463,27 @@ containing a value of this type.
         public static final int common_signin_btn_text_pressed_light=0x7f020072;
         public static final int dialog=0x7f020073;
         public static final int drawer_shadow=0x7f020074;
-        public static final int ic_drawer=0x7f020075;
-        public static final int ic_launcher=0x7f020076;
-        public static final int ic_launcher_2=0x7f020077;
-        public static final int ic_plusone_medium_off_client=0x7f020078;
-        public static final int ic_plusone_small_off_client=0x7f020079;
-        public static final int ic_plusone_standard_off_client=0x7f02007a;
-        public static final int ic_plusone_tall_off_client=0x7f02007b;
-        public static final int message=0x7f02007c;
-        public static final int powered_by_google_dark=0x7f02007d;
-        public static final int powered_by_google_light=0x7f02007e;
-        public static final int refresh=0x7f02007f;
-        public static final int reject=0x7f020080;
-        public static final int reject_button_style=0x7f020081;
-        public static final int reject_pressed=0x7f020082;
-        public static final int settings=0x7f020083;
+        public static final int gray_badge=0x7f020075;
+        public static final int ic_drawer=0x7f020076;
+        public static final int ic_launcher=0x7f020077;
+        public static final int ic_launcher_2=0x7f020078;
+        public static final int ic_plusone_medium_off_client=0x7f020079;
+        public static final int ic_plusone_small_off_client=0x7f02007a;
+        public static final int ic_plusone_standard_off_client=0x7f02007b;
+        public static final int ic_plusone_tall_off_client=0x7f02007c;
+        public static final int message=0x7f02007d;
+        public static final int powered_by_google_dark=0x7f02007e;
+        public static final int powered_by_google_light=0x7f02007f;
+        public static final int red_badge=0x7f020080;
+        public static final int refresh=0x7f020081;
+        public static final int reject=0x7f020082;
+        public static final int reject_button_style=0x7f020083;
+        public static final int reject_pressed=0x7f020084;
+        public static final int settings=0x7f020085;
     }
     public static final class id {
-        public static final int Id=0x7f080055;
-        public static final int accept=0x7f080053;
+        public static final int Id=0x7f080056;
+        public static final int accept=0x7f080054;
         public static final int action_bar=0x7f08002e;
         public static final int action_bar_activity_content=0x7f080027;
         public static final int action_bar_container=0x7f08002d;
@@ -1490,11 +1492,10 @@ containing a value of this type.
         public static final int action_bar_subtitle=0x7f080035;
         public static final int action_bar_title=0x7f080034;
         public static final int action_context_bar=0x7f08002f;
-        public static final int action_example=0x7f080059;
+        public static final int action_example=0x7f08005c;
         public static final int action_menu_divider=0x7f080028;
         public static final int action_menu_presenter=0x7f080029;
         public static final int action_mode_close_button=0x7f080036;
-        public static final int action_settings=0x7f080058;
         public static final int activity_chooser_view_content=0x7f080037;
         public static final int always=0x7f08001e;
         public static final int beginning=0x7f080023;
@@ -1505,8 +1506,6 @@ containing a value of this type.
         public static final int checkbox=0x7f08003f;
         public static final int classic=0x7f080011;
         public static final int collapseActionView=0x7f080020;
-        public static final int country_fragment=0x7f080056;
-        public static final int cur=0x7f080052;
         public static final int default_activity_button=0x7f08003a;
         public static final int dialog=0x7f080021;
         public static final int disableHome=0x7f08001b;
@@ -1515,7 +1514,7 @@ containing a value of this type.
         public static final int end=0x7f080025;
         public static final int expand_activities_button=0x7f080038;
         public static final int expanded_menu=0x7f08003e;
-        public static final int flag=0x7f080050;
+        public static final int flag=0x7f080051;
         public static final int grayscale=0x7f080012;
         public static final int holo_dark=0x7f080005;
         public static final int holo_light=0x7f080006;
@@ -1526,9 +1525,12 @@ containing a value of this type.
         public static final int ifRoom=0x7f08001d;
         public static final int image=0x7f080039;
         public static final int listMode=0x7f080014;
+        public static final int list_content=0x7f080050;
         public static final int list_item=0x7f08003b;
         public static final int map=0x7f08004f;
         public static final int match_parent=0x7f08000c;
+        public static final int message=0x7f080053;
+        public static final int messages_fragment=0x7f080057;
         public static final int middle=0x7f080024;
         public static final int monochrome=0x7f080013;
         public static final int never=0x7f08001c;
@@ -1539,7 +1541,7 @@ containing a value of this type.
         public static final int progress_circular=0x7f08002a;
         public static final int progress_horizontal=0x7f08002b;
         public static final int radio=0x7f080041;
-        public static final int reject=0x7f080054;
+        public static final int reject=0x7f080055;
         public static final int sandbox=0x7f080008;
         public static final int satellite=0x7f080002;
         public static final int search_badge=0x7f080044;
@@ -1560,14 +1562,17 @@ containing a value of this type.
         public static final int split_action_bar=0x7f080030;
         public static final int strict_sandbox=0x7f080009;
         public static final int submit_area=0x7f08004b;
-        public static final int switch1=0x7f080057;
+        public static final int switch1=0x7f080058;
         public static final int tabMode=0x7f080015;
+        public static final int tab_badge=0x7f08005b;
+        public static final int tab_icon=0x7f080059;
+        public static final int tab_text=0x7f08005a;
         public static final int terrain=0x7f080003;
         public static final int title=0x7f08003d;
         public static final int top_action_bar=0x7f080032;
-        public static final int txt=0x7f080051;
         public static final int up=0x7f080033;
         public static final int useLogo=0x7f080016;
+        public static final int userName=0x7f080052;
         public static final int withText=0x7f08001f;
         public static final int wrap_content=0x7f08000d;
     }
@@ -1630,10 +1635,10 @@ containing a value of this type.
         public static final int messages_main=0x7f03001d;
         public static final int options=0x7f03001e;
         public static final int support_simple_spinner_dropdown_item=0x7f03001f;
+        public static final int tab_default=0x7f030020;
     }
     public static final class menu {
-        public static final int global=0x7f0c0000;
-        public static final int main=0x7f0c0001;
+        public static final int main=0x7f0c0000;
     }
     public static final class string {
         /**  Content description for the action bar "home" affordance. [CHAR LIMIT=NONE] 

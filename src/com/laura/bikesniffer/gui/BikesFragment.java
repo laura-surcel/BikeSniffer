@@ -29,7 +29,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.laura.bikesniffer.R;
 import com.laura.bikesniffer.online.ConnectionRequest;
 import com.laura.bikesniffer.online.MapUpdateRequest;
-import com.laura.bikesniffer.online.MessageRetrieverTask;
 import com.laura.bikesniffer.utils.UsersManager;
 
 
@@ -52,7 +51,6 @@ public class BikesFragment extends Fragment
 	private static BikesFragment sInstance;
 	private View mRootView;
 	private ViewGroup mPrevContainer;
-	private MessageRetrieverTask mMessageRetriever;
 	
     /**
      * Returns a new instance of this fragment for the given section
@@ -106,9 +104,7 @@ public class BikesFragment extends Fragment
     	            {
     	            	mLocationSource = new LongPressLocationSource();
     	            	mMarkerHandler = new MarkerHandler(mActivity);
-    	            	mMessageRetriever = new MessageRetrieverTask(mActivity, this);
     	            	setUpMapIfNeeded();
-    	            	mMessageRetriever.startRepeatingTask();
     	            }
     	            mPrevContainer = container;
     	        } catch (InflateException e) {

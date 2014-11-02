@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -14,23 +15,26 @@ import org.json.JSONObject;
 import android.content.Context;
 import android.util.Log;
 
-import com.laura.bikesniffer.gui.BikesFragment;
+import com.laura.bikesniffer.gui.MessagesFragment;
+import com.laura.bikesniffer.utils.Message;
 
 public class RetrieveMessagesRequest extends HttpAsyncRequest
 {
-	private BikesFragment map;
-	private String msg;
+	private MessagesFragment mFragment;
 	private int code = 0;
+	ArrayList<Message> messages = new ArrayList<Message>();
 	
-	public RetrieveMessagesRequest(Context c, BikesFragment m) 
+	public RetrieveMessagesRequest(Context c, MessagesFragment m) 
 	{
 		super(c);
-		map = m;
+		mFragment = m;
 	}
 
 	protected String makeRequest()
 	{
 		try {
+			messages.clear();
+			
  			// URL
  	        URL url = new URL(serverUrl + "/get-messages");
  	        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -55,14 +59,9 @@ public class RetrieveMessagesRequest extends HttpAsyncRequest
 	 	       	{
 	 	       		body = body + line;
 	 	       	}
-	 	       	Log.d("MapUpdater", body);
 	 	       	
 	 	       	JSONArray array = new JSONArray(body);
-	 	       	for(int i = 0; i < array.length();)
-	 	       	{
-	 	       		msg = array.getString(i);
-	 	       		break;
-	 	       	}
+	 	       	messages = Message.fromJson(array);
 	 	       	return body;
  	        } 
  	        else 
@@ -82,7 +81,7 @@ public class RetrieveMessagesRequest extends HttpAsyncRequest
 	{
 		if (code == HttpURLConnection.HTTP_OK) 
 		{
-			map.showNewMessage(msg);
+			mFragment.addMessages(messages);
 		}
 	}
 }

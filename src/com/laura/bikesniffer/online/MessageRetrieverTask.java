@@ -2,25 +2,25 @@ package com.laura.bikesniffer.online;
 
 import android.content.Context;
 
-import com.laura.bikesniffer.gui.BikesFragment;
+import com.laura.bikesniffer.gui.MessagesFragment;
 import com.laura.bikesniffer.utils.PeriodicTask;
 
 public class MessageRetrieverTask extends PeriodicTask
 {
-	private BikesFragment mMap;
+	private MessagesFragment mFragment;
 	protected int mInterval = 60000;
 	Context mContext;
 	
-	public MessageRetrieverTask(Context c, BikesFragment m)
+	public MessageRetrieverTask(Context c, MessagesFragment m)
 	{
 		super();
 		mContext = c;
-		mMap = m;
+		mFragment = m;
 	}
 	
 	@Override
 	protected void performTask()
 	{
-		new RetrieveMessagesRequest(mContext, mMap).execute();
+		new RetrieveMessagesRequest(mContext, mFragment).execute();
 	}
 }

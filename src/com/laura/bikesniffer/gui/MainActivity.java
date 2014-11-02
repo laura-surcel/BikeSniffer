@@ -2,6 +2,8 @@ package com.laura.bikesniffer.gui;
 
 import java.util.Locale;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -10,10 +12,14 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.laura.bikesniffer.R;
@@ -34,6 +40,7 @@ public class MainActivity extends ActionBarActivity {
 	 */
 	ViewPager mViewPager;
 	ActionBar actionBar;
+	int numOfMessages = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -79,20 +86,54 @@ public class MainActivity extends ActionBarActivity {
 	                actionBar.newTab()
 	                        .setIcon(icons[i])
 	                        .setTabListener(tabListener));
-	    }		
+	    }
+	    
+	    actionBar.getTabAt(1).setCustomView(renderTabView(this, R.string.action_example, R.drawable.abc_item_background_holo_light, numOfMessages));
 	}
+	
+	@SuppressLint("InflateParams")
+	public static View renderTabView(Context context, int titleResource, int backgroundResource, int badgeNumber) {
+        FrameLayout view = (FrameLayout) LayoutInflater.from(context).inflate(R.layout.tab_default, null);
+        // We need to manually set the LayoutParams here because we don't have a view root
+        view.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        ((TextView) view.findViewById(R.id.tab_text)).setText(titleResource);
+        ((ImageView) view.findViewById(R.id.tab_icon)).setBackgroundResource(R.drawable.message);
+        view.findViewById(R.id.tab_text).setBackgroundResource(backgroundResource);
+        updateTabBadge((TextView) view.findViewById(R.id.tab_badge), badgeNumber);
+        return view;
+    }
+
+    public static void updateTabBadge(ActionBar.Tab tab, int badgeNumber) {
+        updateTabBadge((TextView) tab.getCustomView().findViewById(R.id.tab_badge), badgeNumber);
+    }
+
+    private static void updateTabBadge(TextView view, int badgeNumber) {
+        if (badgeNumber > 0) {
+            view.setVisibility(View.VISIBLE);
+            view.setText(Integer.toString(badgeNumber));
+        }
+        else {
+            view.setVisibility(View.GONE);
+        }
+    }
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
+		getMenuInflater().inflate(R.menu.main, menu);		
 		return true;
 	}
 	
-	public void rejectRequest(View view)
+	public void addNewMessagesNumber(int no)
 	{
-		Log.d("CONNECTION", "reject ");
-		MessagesFragment.getInstance(1).removeElement();
+		numOfMessages = numOfMessages + no;
+		updateTabBadge(actionBar.getTabAt(1), numOfMessages);
+	}
+	
+	public void clearBadgeNumber()
+	{
+		numOfMessages = 0;
+		updateTabBadge(actionBar.getTabAt(1), numOfMessages);
 	}
 
 	@Override

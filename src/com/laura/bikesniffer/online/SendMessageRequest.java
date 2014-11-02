@@ -36,7 +36,7 @@ public class SendMessageRequest extends HttpAsyncRequest
 
  	        // Body
  	        JSONObject json = new JSONObject();
- 			json.put("msg", message);
+ 			json.put("msgType", 1);
  			json.put("senderId", deviceId);
  			json.put("receiverId", recipientId);
  			

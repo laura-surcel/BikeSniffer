@@ -1,64 +1,34 @@
 package com.laura.bikesniffer.gui;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Vector;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.SimpleAdapter;
+import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
+import android.view.animation.Transformation;
 
-import com.laura.bikesniffer.R;
+import com.laura.bikesniffer.online.MessageRetrieverTask;
+import com.laura.bikesniffer.online.RemoveMessagesRequest;
+import com.laura.bikesniffer.utils.Message;
 
 public class MessagesFragment extends ListFragment 
 {
+	static final int ANIMATION_DURATION = 200;
 	private static final String ARG_SECTION_NUMBER = "section_number";
     private static MessagesFragment sInstance;
-	
-	// Array of strings storing country names
-    String[] countries = new String[] {
-        "George",
-        "Claudiu",
-        "Silviu",
-        "Cristi",
-        "Bogdan",
-        "Nelu",
-        "Ana",
-        "Nicu",
-        "Simona",
-        "Ion"
-    };
- 
-    // Array of integers points to images stored in /res/drawable/
-    int[] flags = new int[]{
-        R.drawable.ic_launcher,
-        R.drawable.ic_launcher,
-        R.drawable.ic_launcher,
-        R.drawable.ic_launcher,
-        R.drawable.ic_launcher,
-        R.drawable.ic_launcher,
-        R.drawable.ic_launcher,
-        R.drawable.ic_launcher,
-        R.drawable.ic_launcher,
-        R.drawable.ic_launcher
-    };
- 
-    // Array of strings to store currencies
-    String[] currency = new String[]{
-        "Meet me",
-        "Meet me",
-        "Meet me",
-        "Meet me",
-        "Meet me",
-        "Meet me",
-        "Meet me",
-        "Meet me",
-        "Meet me",
-        "Meet me",
-    };
+
+	private MessageRetrieverTask mMessageRetriever;
+	private ActionBarActivity mActivity;
+	private MessagesListViewAdapter mAdapter;
+	private ArrayList<Message> mMessagesList;
 	
 	public static MessagesFragment getInstance(int sectionNumber) 
 	{
@@ -77,37 +47,140 @@ public class MessagesFragment extends ListFragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) 
 	{
-		init();		
-		return super.onCreateView(inflater, container, savedInstanceState);
+		// Instantiating an adapter to store each items
+        mAdapter = new MessagesListViewAdapter(getActivity(), new ArrayList<Message>());
+        // Attach the adapter to a ListView
+        setListAdapter(mAdapter);
+        
+        mMessagesList = new ArrayList<Message>();
+        
+        // listen for new messages
+        startMessageRetriever();
+        
+        return super.onCreateView(inflater, container, savedInstanceState);
     }
 	
-	void init()
+	@Override
+    public void setMenuVisibility(final boolean visible) 
 	{
-		// Each row in the list stores country name, currency and flag
-        List<HashMap<String,String>> aList = new ArrayList<HashMap<String,String>>();
- 
-        for(int i=0;i<10;i++){
-            HashMap<String, String> hm = new HashMap<String,String>();
-            hm.put("txt", "User : " + countries[i]);
-            hm.put("cur", "Request : " + currency[i]);
-            hm.put("flag", Integer.toString(flags[i]));
-            hm.put("identifier", Integer.toString(i));
-            aList.add(hm);
+        super.setMenuVisibility(visible);
+        
+        if (visible) 
+        {
+        	((MainActivity)getActivity()).clearBadgeNumber();
         }
- 
-        // Keys used in Hashmap
-        String[] from = { "flag","txt","cur"};
- 
-        // Ids of views in listview_layout
-        int[] to = { R.id.flag,R.id.txt,R.id.cur};
- 
-        // Instantiating an adapter to store each items
-        SimpleAdapter adapter = new SimpleAdapter(getActivity().getBaseContext(), aList, R.layout.listview_layout, from, to);
-        setListAdapter(adapter);
+    }
+	
+	@Override
+    public void onAttach(Activity activity) 
+    {
+        super.onAttach(activity);
+        mActivity = (ActionBarActivity)activity;
+    } 
+	
+	void startMessageRetriever()
+	{
+		mMessageRetriever = new MessageRetrieverTask(mActivity, this);
+		mMessageRetriever.startRepeatingTask();
 	}
 	
-	public void removeElement()
+	public void removeMessage(final View view, final long messageId)
 	{
+		AnimationListener al = new AnimationListener() 
+		{
+			@Override
+			public void onAnimationEnd(Animation arg0) {
+				Message m = null;
+				for(Message mm:mMessagesList)
+				{
+					if(messageId == mm.id)
+					{
+						m = mm;
+					}
+				}
+				
+				if(m != null)
+				{
+					mMessagesList.remove(m);
+					mAdapter.remove(m);
+					List<Long> list = new Vector<Long>();
+					list.add(Long.valueOf(m.id));
+					new RemoveMessagesRequest(getActivity(), list).execute();
+				}
+				
+				ViewHolder vh = (ViewHolder)view.getTag();
+				vh.needInflate = true;
+				mAdapter.notifyDataSetChanged();
+			}
+			
+			@Override
+			public void onAnimationRepeat(Animation arg0) {}
+			@Override
+			public void onAnimationStart(Animation arg0) {}
+		};
 		
+		collapse(view, al);
+	}
+	
+	private void collapse(final View v, AnimationListener al) 
+	{
+		final int initialHeight = v.getMeasuredHeight();
+		
+		Animation anim = new Animation() 
+		{
+			@Override
+			protected void applyTransformation(float interpolatedTime, Transformation t) 
+			{
+				if (interpolatedTime == 1) 
+				{
+					v.setVisibility(View.GONE);
+				}
+				else 
+				{
+					v.getLayoutParams().height = initialHeight - (int)(initialHeight * interpolatedTime);
+					v.requestLayout();
+				}
+			}
+			@Override
+			public boolean willChangeBounds() 
+			{
+				return true;
+			}
+		};
+		
+		if (al!=null) 
+		{
+			anim.setAnimationListener(al);
+		}
+		
+		anim.setDuration(ANIMATION_DURATION);
+		v.startAnimation(anim);
+	}
+	
+	public void addMessages(ArrayList<Message> messages)
+	{
+		ArrayList<Message> newOnes = new ArrayList<Message>();
+		for(Message m:messages)
+		{			
+			if(!messageExists(m))
+			{
+				mMessagesList.add(m);
+				newOnes.add(m);
+			}
+		}
+		mAdapter.addAll(newOnes);
+		((MainActivity)getActivity()).addNewMessagesNumber(newOnes.size());
+	}
+	
+	private boolean messageExists(Message m)
+	{
+		for(Message mm:mMessagesList)
+		{
+			if(m.id == mm.id)
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 }
