@@ -135,6 +135,11 @@ public class MainActivity extends ActionBarActivity {
 		numOfMessages = 0;
 		updateTabBadge(actionBar.getTabAt(1), numOfMessages);
 	}
+	
+	public void selectTab(int position)
+	{
+		actionBar.selectTab(actionBar.getTabAt(position));
+	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) 

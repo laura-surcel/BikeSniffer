@@ -71,7 +71,7 @@ public class MessagesListViewAdapter extends ArrayAdapter<Message>
 			{
 				long messageId = Long.parseLong(view.getContentDescription().toString());
 				Log.d("CONNECTION", "accept " + messageId);
-				//MessagesFragment.getInstance(1).removeElement(messageId);
+				
 			}
 		});
     	
