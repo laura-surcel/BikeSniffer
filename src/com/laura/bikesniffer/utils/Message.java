@@ -37,6 +37,22 @@ public class Message
             e.printStackTrace();
        }
     }
+    
+    public JSONObject toJson()
+    {
+    	JSONObject json = new JSONObject();
+    	try 
+    	{
+			json.put("id", id);
+			json.put("sender_id", senderId);
+			json.put("type", type);
+		} 
+    	catch (JSONException e) 
+    	{
+			e.printStackTrace();
+		}
+    	return json;
+    }
 
     // Factory method to convert an array of JSON objects into a list of objects
     // User.fromJson(jsonArray);

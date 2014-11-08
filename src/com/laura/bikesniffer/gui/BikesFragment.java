@@ -32,6 +32,7 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.laura.bikesniffer.R;
 import com.laura.bikesniffer.online.ConnectionRequest;
 import com.laura.bikesniffer.online.DownloadTask;
+import com.laura.bikesniffer.online.LocateUserRequest;
 import com.laura.bikesniffer.online.MapUpdateRequest;
 import com.laura.bikesniffer.utils.UsersManager;
 
@@ -109,7 +110,7 @@ public class BikesFragment extends Fragment
     	            	mLocationSource = new LongPressLocationSource();
     	            	mMarkerHandler = new MarkerHandler(mActivity);
     	            	setUpMapIfNeeded();
-    	            	setupDirections();
+    	            	// setupDirections();
     	            }
     	            mPrevContainer = container;
     	        } catch (InflateException e) {
@@ -210,7 +211,7 @@ public class BikesFragment extends Fragment
     		GeoPosition gp = locations.get(i);
     		LatLng loc = new LatLng(gp.getLatitude(), gp.getLongitude());
     		Marker marker = mMap.addMarker(new MarkerOptions().position(loc));
-    		UsersManager.getInstance().addUserIdForMarker(gp.userId, marker.getId());
+    		UsersManager.getInstance().addUserIdForMarker(gp.userId, marker);
     	}
     }
     
@@ -239,6 +240,32 @@ public class BikesFragment extends Fragment
         setUpMapIfNeeded();
         connect();
         mLocationSource.onResume();
+    }
+    
+    public void getFocus()
+    {
+    	Log.d("ROUTES", "getFocus ");
+    	((MainActivity)mActivity).selectTab(0);
+    }
+    
+    public void getRouteToUser(String userId)
+    {
+    	Log.d("ROUTES", "getRouteToUser " + userId);
+    	new LocateUserRequest(mActivity, userId).execute();
+    }
+    
+    public void showRouteToUser(double lat, double longit)
+    {
+    	if(mPrevPosition == null)
+    		return;
+    				
+    	Log.d("ROUTES", "showRouteToUser");
+    	LatLng origin = new LatLng(mPrevPosition.getLatitude(), mPrevPosition.getLongitude());
+        LatLng dest = new LatLng(lat, longit);
+        
+    	String url = getDirectionsUrl(origin, dest);
+        DownloadTask downloadTask = new DownloadTask();
+        downloadTask.execute(url);
     }
     
     private void setUpMapIfNeeded() 
@@ -314,7 +341,9 @@ public class BikesFragment extends Fragment
         String output = "json";
 
         String url = "https://maps.googleapis.com/maps/api/directions/"+output+"?"+parameters;
-
+        
+        Log.d("ROUTES", url);
+        
         return url;
     }
     

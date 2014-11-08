@@ -2,8 +2,10 @@ package com.laura.bikesniffer.gui;
 
 import java.util.ArrayList;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -57,21 +59,30 @@ public class MessagesListViewAdapter extends ArrayAdapter<Message>
 			public void onClick(View view) 
 			{
 				long messageId = Long.parseLong(view.getContentDescription().toString());
-				Log.d("CONNECTION", "reject " + messageId);
 				MessagesFragment.getInstance(1).removeMessage(finalView, messageId);				
 			}
 		});
     	
     	ImageButton accept = vh.accept;
-    	accept.setContentDescription("" + message.id);
+    	accept.setContentDescription(message.toJson().toString());
     	accept.setOnClickListener(new OnClickListener() 
     	{			
 			@Override
 			public void onClick(View view) 
 			{
-				long messageId = Long.parseLong(view.getContentDescription().toString());
-				Log.d("CONNECTION", "accept " + messageId);
-				
+				try 
+				{
+					JSONObject reconstructed = new JSONObject(view.getContentDescription().toString());
+					long messageId = reconstructed.getLong("id");
+					String senderId = reconstructed.getString("sender_id");
+					BikesFragment.getInstance(1).getFocus();
+					BikesFragment.getInstance(1).getRouteToUser(senderId);
+					MessagesFragment.getInstance(1).removeMessage(finalView, messageId);
+				} 
+				catch (JSONException e) 
+				{
+					e.printStackTrace();
+				}
 			}
 		});
     	

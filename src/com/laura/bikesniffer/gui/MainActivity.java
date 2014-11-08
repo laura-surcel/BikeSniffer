@@ -161,9 +161,11 @@ public class MainActivity extends ActionBarActivity {
 	 * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
 	 * one of the sections/tabs/pages.
 	 */
-	public class SectionsPagerAdapter extends FragmentPagerAdapter {
+	public class SectionsPagerAdapter extends FragmentPagerAdapter 
+	{
 
-		public SectionsPagerAdapter(FragmentManager fm) {
+		public SectionsPagerAdapter(FragmentManager fm) 
+		{
 			super(fm);
 		}
 
@@ -182,13 +184,15 @@ public class MainActivity extends ActionBarActivity {
 		}
 
 		@Override
-		public int getCount() {
+		public int getCount() 
+		{
 			// Show 3 total pages.
 			return 2;
 		}
 
 		@Override
-		public CharSequence getPageTitle(int position) {
+		public CharSequence getPageTitle(int position) 
+		{
 			Locale l = Locale.getDefault();
 			switch (position) {
 			case 0:
