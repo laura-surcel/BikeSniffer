@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical" >
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:text="Title" 
+        android:layout_alignParentTop="true"/>
+
+    <ImageButton
+	    android:id="@+id/button1"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content" 
+		android:background="@drawable/accept_button_style" 
+		android:layout_below="@+id/title"
+        android:layout_marginTop="5dp"
+		android:layout_alignParentLeft="true"/>
+    
+    <TextView
+            android:id="@+id/here"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" 
+			android:layout_below="@+id/title"
+            android:layout_toRightOf="@+id/button1"
+            android:textSize="18sp"
+        	android:layout_marginTop="6dp"
+            android:text="at my location" />
+    
+    <ImageButton
+	    android:id="@+id/button2"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content" 
+		android:background="@drawable/accept_button_style" 
+		android:layout_below="@+id/button1"
+		android:layout_alignParentLeft="true"/>
+    
+    <TextView
+            android:id="@+id/there"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/button2"
+			android:layout_below="@+id/here"
+        	android:layout_marginTop="20dp"
+            android:textSize="18sp"
+            android:text="at your location" />
+    
+    <ImageButton
+	    android:id="@+id/button3"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content" 
+		android:background="@drawable/accept_button_style" 
+		android:layout_below="@+id/button2"
+		android:layout_alignParentLeft="true"/>
+    
+    <TextView
+            android:id="@+id/choose"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/button3"
+			android:layout_below="@+id/there"
+            android:textSize="18sp"
+        	android:layout_marginTop="20dp"
+            android:text="choose location" />
+
+</RelativeLayout>

@@ -23,6 +23,7 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
+import com.google.android.gms.maps.GoogleMap.OnMyLocationButtonClickListener;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
@@ -108,9 +109,7 @@ public class BikesFragment extends Fragment
     	            else
     	            {
     	            	mLocationSource = new LongPressLocationSource();
-    	            	mMarkerHandler = new MarkerHandler(mActivity);
     	            	setUpMapIfNeeded();
-    	            	// setupDirections();
     	            }
     	            mPrevContainer = container;
     	        } catch (InflateException e) {
@@ -190,27 +189,24 @@ public class BikesFragment extends Fragment
     	Log.d("LOCATION", "Refresh");
     	new MapUpdateRequest(mActivity, this).execute();
     }
-	
-	public void showNewMessage(String msg)
-	{
-		CustomMessage popup = new CustomMessage(mActivity);
-		popup.show();
-	}
-    
+	    
     public void populateMapWithLocations(List<GeoPosition> locations)
     {
-    	mPrevPosition = null;
     	if(mMap != null)
     	{
     		mMap.clear();
     		UsersManager.getInstance().clearHistory();
     	}
     	
+    	LatLng loc = new LatLng(mPrevPosition.getLatitude(), mPrevPosition.getLongitude());
+    	Marker marker = mMap.addMarker(new MarkerOptions().position(loc));
+		marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_launcher));
+		
     	for(int i = 0; i < locations.size(); ++i)
     	{
     		GeoPosition gp = locations.get(i);
-    		LatLng loc = new LatLng(gp.getLatitude(), gp.getLongitude());
-    		Marker marker = mMap.addMarker(new MarkerOptions().position(loc));
+    		loc = new LatLng(gp.getLatitude(), gp.getLongitude());
+    		marker = mMap.addMarker(new MarkerOptions().position(loc));
     		UsersManager.getInstance().addUserIdForMarker(gp.userId, marker);
     	}
     }
@@ -271,40 +267,39 @@ public class BikesFragment extends Fragment
     private void setUpMapIfNeeded() 
     {
         // Do a null check to confirm that we have not already instantiated the map.
-        if (mMap == null) {
+        if (mMap == null) 
+        {
             // Try to obtain the map from the SupportMapFragment.
             mMap = ((SupportMapFragment) mActivity.getSupportFragmentManager().findFragmentById(R.id.map))
                     .getMap();
+            
             // Check if we were successful in obtaining the map.
-            if (mMap != null) {
-            	setUpMap();
+            if (mMap != null) 
+            {
+            	mMarkerHandler = new MarkerHandler(mRootView, mActivity, mMap);
+            	mMarkerHandler.init();
+                setUpMap();
             }
         }
-    }  
-    
-    private void connect()
-    {
-    	new ConnectionRequest(mActivity, true).execute();
     }
     
-    private void disconnect()
-    {
-    	new ConnectionRequest(mActivity, false).execute();
-    }
-    
-    private void setUpMap() {
+    private void setUpMap() 
+    {   	
     	mMap.setLocationSource(mLocationSource);
         mMap.setOnMarkerClickListener(mMarkerHandler);
         mMap.setOnMapLongClickListener(mLocationSource);
         mMap.setMyLocationEnabled(true);
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        mMap.setTrafficEnabled(true);
         
      	// Acquire a reference to the system Location Manager
         LocationManager locationManager = (LocationManager) mActivity.getSystemService(Context.LOCATION_SERVICE);
 
         // Define a listener that responds to location updates
-        LocationListener locationListener = new LocationListener() {
-            public void onLocationChanged(Location location) {
+        LocationListener locationListener = new LocationListener() 
+        {
+            public void onLocationChanged(Location location) 
+            {
               // Called when a new location is found by the network location provider.
               makeUseOfNewLocation(location);
             }
@@ -315,10 +310,36 @@ public class BikesFragment extends Fragment
 
             public void onProviderDisabled(String provider) {}
           };
+         
+          mMap.setOnMyLocationButtonClickListener(new OnMyLocationButtonClickListener() 
+          {
+                @Override
+                public boolean onMyLocationButtonClick() 
+                {
+                	// Called when a new location is found by the network location provider.
+                    if(mPrevPosition != null)
+                	{
+                    	LatLng loc = new LatLng(mPrevPosition.getLatitude(), mPrevPosition.getLongitude());
+                    	mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(loc, 16.0f));
+                	}
+                    return true;
+                }
+            });
+
 
         // Register the listener with the Location Manager to receive location updates
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+    }
+    
+    private void connect()
+    {
+    	new ConnectionRequest(mActivity, true).execute();
+    }
+    
+    private void disconnect()
+    {
+    	new ConnectionRequest(mActivity, false).execute();
     }
     
     private String getDirectionsUrl(LatLng origin,LatLng dest)

@@ -41,4 +41,9 @@ public class UsersManager
 	{
 		return mMarkersToUsers.get(id);
 	}
+	
+	public String getUserNameForMarkerId(String id)
+	{
+		return "Biker";
+	}
 }

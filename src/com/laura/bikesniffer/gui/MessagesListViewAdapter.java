@@ -49,7 +49,21 @@ public class MessagesListViewAdapter extends ArrayAdapter<Message>
     	TextView tvMessage = vh.message;
     	// Populate the data into the template view using the data object
     	userName.setText(message.senderId);
-    	tvMessage.setText("Meet me");
+    	
+    	switch(message.type)
+    	{
+    		case 1:
+    			tvMessage.setText("Meet me at my location");
+    			break;
+    		case 2:
+    			tvMessage.setText("Meet me at your location");
+    			break;
+    		case 3:
+    			tvMessage.setText("Meet me at this location");
+    			break;
+    		default:
+    			break;
+    	}
     	
     	ImageButton reject = vh.reject;
     	reject.setContentDescription("" + message.id);

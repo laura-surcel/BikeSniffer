@@ -15,14 +15,14 @@ import android.util.Log;
 
 public class SendMessageRequest extends HttpAsyncRequest
 {
-	String message;
 	String recipientId;
+	int type;
 
-	public SendMessageRequest(Context c, String message, String recipient) 
+	public SendMessageRequest(Context c, String recipient, int type) 
 	{
 		super(c);
-		this.message = message;
 		this.recipientId = recipient;
+		this.type = type;
 	}
 
 	protected String makeRequest()
@@ -36,7 +36,7 @@ public class SendMessageRequest extends HttpAsyncRequest
 
  	        // Body
  	        JSONObject json = new JSONObject();
- 			json.put("msgType", 1);
+ 			json.put("msgType", type);
  			json.put("senderId", deviceId);
  			json.put("receiverId", recipientId);
  			

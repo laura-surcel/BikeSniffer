@@ -20,7 +20,6 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.laura.bikesniffer.R;
 
@@ -149,7 +148,6 @@ public class MainActivity extends ActionBarActivity {
 		// as you specify a parent activity in AndroidManifest.xml.
 		if (item.getItemId() == R.id.action_example) 
 		{
-            Toast.makeText(this, "Fetching your location...", Toast.LENGTH_LONG).show();
             BikesFragment.getInstance(1).refreshLocation();
             return true;
         }
