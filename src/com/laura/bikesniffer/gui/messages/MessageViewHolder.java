@@ -1,9 +1,9 @@
-package com.laura.bikesniffer.gui;
+package com.laura.bikesniffer.gui.messages;
 
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-public class ViewHolder 
+public class MessageViewHolder 
 {
 	public boolean needInflate;
 	public TextView userName;

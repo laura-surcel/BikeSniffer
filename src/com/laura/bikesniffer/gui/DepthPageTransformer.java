@@ -6,11 +6,11 @@ import android.view.View;
 class DepthPageTransformer implements PageTransformer 
 {
     private static final float MIN_SCALE = 0.75f;
-
+    
     public void transformPage(View view, float position) 
     {
         int pageWidth = view.getWidth();
-
+        
         if (position < -1) { // [-Infinity,-1)
             // This page is way off-screen to the left.
             view.setAlpha(0);
@@ -21,7 +21,6 @@ class DepthPageTransformer implements PageTransformer
             view.setTranslationX(0);
             view.setScaleX(1);
             view.setScaleY(1);
-
         } else if (position <= 1) { // (0,1]
             // Fade the page out.
             view.setAlpha(1 - position);

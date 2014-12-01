@@ -31,10 +31,10 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.laura.bikesniffer.R;
-import com.laura.bikesniffer.online.ConnectionRequest;
 import com.laura.bikesniffer.online.DownloadTask;
 import com.laura.bikesniffer.online.LocateUserRequest;
 import com.laura.bikesniffer.online.MapUpdateRequest;
+import com.laura.bikesniffer.utils.GeoPosition;
 import com.laura.bikesniffer.utils.UsersManager;
 
 
@@ -227,14 +227,12 @@ public class BikesFragment extends Fragment
     {
     	super.onPause();
         mLocationSource.onPause();
-        disconnect();    	
     }
     
     public void onResume() 
     {
     	super.onResume();
         setUpMapIfNeeded();
-        connect();
         mLocationSource.onResume();
     }
     
@@ -330,16 +328,6 @@ public class BikesFragment extends Fragment
         // Register the listener with the Location Manager to receive location updates
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
-    }
-    
-    private void connect()
-    {
-    	new ConnectionRequest(mActivity, true).execute();
-    }
-    
-    private void disconnect()
-    {
-    	new ConnectionRequest(mActivity, false).execute();
     }
     
     private String getDirectionsUrl(LatLng origin,LatLng dest)

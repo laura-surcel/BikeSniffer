@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <TextView
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+        	android:layout_alignParentTop="true"
+        	android:layout_alignParentLeft="true"
+	        android:layout_marginLeft="26dp"
+	        android:layout_marginTop="24dp"
+            android:textSize="20sp"
+            android:text="Biker name" />
+    
+    <EditText
+        android:id="@+id/editName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/name"
+        android:layout_alignParentLeft="true"
+	    android:layout_marginLeft="26dp"
+        android:layout_marginTop="10dp"
+        android:ems="10"
+        android:inputType="textPersonName" >
+    </EditText>
+    
+    <TextView
+            android:id="@+id/searchDistance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+        	android:layout_below="@+id/editName"
+        	android:layout_alignParentLeft="true"
+	        android:layout_marginLeft="26dp"
+	        android:layout_marginTop="24dp"
+            android:textSize="20sp"
+            android:text="@string/radius_intro" />
+	
+    <Spinner
+        android:id="@+id/radiusSpinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/searchDistance"
+        android:layout_marginLeft="26dp"
+        android:layout_marginTop="14dp"
+        android:entries="@array/radius_array"
+        android:prompt="@string/choose_radius" />
+    
+    <TextView
+            android:id="@+id/mapOptions"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+        	android:layout_below="@+id/radiusSpinner"
+        	android:layout_alignParentLeft="true"
+	        android:layout_marginLeft="26dp"
+	        android:layout_marginTop="24dp"
+            android:textSize="20sp"
+            android:text="@string/map_options" />
+    
+    <RadioGroup
+        android:id="@+id/mapOptionsGroup"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+        android:layout_below="@+id/mapOptions"
+        android:layout_marginLeft="26dp"
+        android:layout_marginTop="14dp"
+	    android:orientation="vertical">
+	    
+	    <RadioButton android:id="@+id/map_option1"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="@string/map_option1"/>
+	    
+	    <RadioButton android:id="@+id/map_option2"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="@string/map_option2"/>
+	</RadioGroup>
+    
+</RelativeLayout>

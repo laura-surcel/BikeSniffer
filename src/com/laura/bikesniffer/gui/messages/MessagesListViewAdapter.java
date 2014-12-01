@@ -1,4 +1,4 @@
-package com.laura.bikesniffer.gui;
+package com.laura.bikesniffer.gui.messages;
 
 import java.util.ArrayList;
 
@@ -15,35 +15,36 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.laura.bikesniffer.R;
+import com.laura.bikesniffer.gui.BikesFragment;
 import com.laura.bikesniffer.utils.Message;
 
 public class MessagesListViewAdapter extends ArrayAdapter<Message> 
 {
     public MessagesListViewAdapter(Context context, ArrayList<Message> messages) 
     {
-    	super(context, R.layout.listview_layout, messages);
+    	super(context, R.layout.messages_layout, messages);
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) 
     {
-    	ViewHolder vh;
+    	MessageViewHolder vh;
     	// Get the data item for this position
     	Message message = getItem(position);    
     	// Check if an existing view is being reused, otherwise inflate the view
     	if (convertView == null) 
     	{
-    		convertView = LayoutInflater.from(getContext()).inflate(R.layout.listview_layout, parent, false);
+    		convertView = LayoutInflater.from(getContext()).inflate(R.layout.messages_layout, parent, false);
     		setViewHolder(convertView);
     	}
-    	else if (((ViewHolder)convertView.getTag()).needInflate) 
+    	else if (((MessageViewHolder)convertView.getTag()).needInflate) 
     	{
-    		convertView = LayoutInflater.from(getContext()).inflate(R.layout.listview_layout, parent, false);
+    		convertView = LayoutInflater.from(getContext()).inflate(R.layout.messages_layout, parent, false);
 			setViewHolder(convertView);
 		}
       
     	final View finalView = convertView;
-    	vh = (ViewHolder)convertView.getTag();
+    	vh = (MessageViewHolder)convertView.getTag();
     	// Lookup view for data population
     	TextView userName = vh.userName;
     	TextView tvMessage = vh.message;
@@ -89,8 +90,8 @@ public class MessagesListViewAdapter extends ArrayAdapter<Message>
 					JSONObject reconstructed = new JSONObject(view.getContentDescription().toString());
 					long messageId = reconstructed.getLong("id");
 					String senderId = reconstructed.getString("sender_id");
-					BikesFragment.getInstance(1).getFocus();
-					BikesFragment.getInstance(1).getRouteToUser(senderId);
+					BikesFragment.getInstance(0).getFocus();
+					BikesFragment.getInstance(0).getRouteToUser(senderId);
 					MessagesFragment.getInstance(1).removeMessage(finalView, messageId);
 				} 
 				catch (JSONException e) 
@@ -106,7 +107,7 @@ public class MessagesListViewAdapter extends ArrayAdapter<Message>
     
     private void setViewHolder(View view) 
 	{
-		ViewHolder vh = new ViewHolder();
+		MessageViewHolder vh = new MessageViewHolder();
 		vh.userName = (TextView)view.findViewById(R.id.userName);
 		vh.message = (TextView) view.findViewById(R.id.message);
 		vh.accept = (ImageButton) view.findViewById(R.id.accept);

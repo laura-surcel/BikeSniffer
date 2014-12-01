@@ -15,7 +15,7 @@ import org.json.JSONObject;
 import android.content.Context;
 import android.util.Log;
 
-import com.laura.bikesniffer.gui.MessagesFragment;
+import com.laura.bikesniffer.gui.messages.MessagesFragment;
 import com.laura.bikesniffer.utils.Message;
 
 public class RetrieveMessagesRequest extends HttpAsyncRequest

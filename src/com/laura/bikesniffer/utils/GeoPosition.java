@@ -1,4 +1,4 @@
-package com.laura.bikesniffer.gui;
+package com.laura.bikesniffer.utils;
 
 import com.google.android.gms.maps.model.*;
 

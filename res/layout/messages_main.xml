@@ -4,5 +4,5 @@
   		android:id="@+id/messages_fragment"
 	  	android:layout_width="fill_parent"
 	 	android:layout_height="wrap_content"
-	  	class="com.laura.bikesniffer.gui.MessagesFragment"/>
+	  	class="com.laura.bikesniffer.gui.messages.MessagesFragment"/>
 

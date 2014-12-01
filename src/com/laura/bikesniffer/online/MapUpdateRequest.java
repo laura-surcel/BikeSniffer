@@ -18,7 +18,7 @@ import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.laura.bikesniffer.gui.BikesFragment;
-import com.laura.bikesniffer.gui.GeoPosition;
+import com.laura.bikesniffer.utils.GeoPosition;
 
 public class MapUpdateRequest extends HttpAsyncRequest
 {

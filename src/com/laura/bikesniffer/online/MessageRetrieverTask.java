@@ -2,7 +2,7 @@ package com.laura.bikesniffer.online;
 
 import android.content.Context;
 
-import com.laura.bikesniffer.gui.MessagesFragment;
+import com.laura.bikesniffer.gui.messages.MessagesFragment;
 import com.laura.bikesniffer.utils.PeriodicTask;
 
 public class MessageRetrieverTask extends PeriodicTask

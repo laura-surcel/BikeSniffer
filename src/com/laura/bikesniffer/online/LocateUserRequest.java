@@ -78,7 +78,7 @@ public class LocateUserRequest extends HttpAsyncRequest
 	{
 		if (code == HttpURLConnection.HTTP_OK) 
 		{
-			BikesFragment.getInstance(1).showRouteToUser(lat, longit);
+			BikesFragment.getInstance(0).showRouteToUser(lat, longit);
 		}
 	}
 }

@@ -1,4 +1,4 @@
-package com.laura.bikesniffer.gui;
+package com.laura.bikesniffer.gui.messages;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +15,7 @@ import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.Transformation;
 
+import com.laura.bikesniffer.gui.MainActivity;
 import com.laura.bikesniffer.online.MessageRetrieverTask;
 import com.laura.bikesniffer.online.RemoveMessagesRequest;
 import com.laura.bikesniffer.utils.Message;
@@ -108,7 +109,7 @@ public class MessagesFragment extends ListFragment
 					new RemoveMessagesRequest(getActivity(), list).execute();
 				}
 				
-				ViewHolder vh = (ViewHolder)view.getTag();
+				MessageViewHolder vh = (MessageViewHolder)view.getTag();
 				vh.needInflate = true;
 				mAdapter.notifyDataSetChanged();
 			}
