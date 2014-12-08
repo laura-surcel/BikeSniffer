@@ -11,7 +11,7 @@ public class HttpAsyncRequest extends AsyncTask<Object, Object, Object>
 {
 	protected Context context;
 	protected static String deviceId = null;
-	protected static String serverUrl = "http://86.127.25.65:3128";
+	protected static String serverUrl = "http://79.117.189.183:3128";
 	protected boolean isConnected = false;
 	
 	public HttpAsyncRequest(Context c)

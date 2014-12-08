@@ -6,10 +6,12 @@ import java.util.List;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -111,6 +113,7 @@ public class BikesFragment extends Fragment
     	            	mLocationSource = new LongPressLocationSource();
     	            	setUpMapIfNeeded();
     	            }
+    	            
     	            mPrevContainer = container;
     	        } catch (InflateException e) {
     	            Log.w("InflateException happened ou nous", e.getMessage());
@@ -198,15 +201,18 @@ public class BikesFragment extends Fragment
     		UsersManager.getInstance().clearHistory();
     	}
     	
-    	LatLng loc = new LatLng(mPrevPosition.getLatitude(), mPrevPosition.getLongitude());
-    	Marker marker = mMap.addMarker(new MarkerOptions().position(loc));
-		marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_launcher));
+    	if (mPrevPosition != null)
+    	{
+    		LatLng loc = new LatLng(mPrevPosition.getLatitude(), mPrevPosition.getLongitude());
+        	Marker marker = mMap.addMarker(new MarkerOptions().position(loc));
+    		marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_launcher));
+    	}
 		
     	for(int i = 0; i < locations.size(); ++i)
     	{
     		GeoPosition gp = locations.get(i);
-    		loc = new LatLng(gp.getLatitude(), gp.getLongitude());
-    		marker = mMap.addMarker(new MarkerOptions().position(loc));
+    		LatLng loc = new LatLng(gp.getLatitude(), gp.getLongitude());
+    		Marker marker = mMap.addMarker(new MarkerOptions().position(loc));
     		UsersManager.getInstance().addUserIdForMarker(gp.userId, marker);
     	}
     }
@@ -287,7 +293,18 @@ public class BikesFragment extends Fragment
         mMap.setOnMarkerClickListener(mMarkerHandler);
         mMap.setOnMapLongClickListener(mLocationSource);
         mMap.setMyLocationEnabled(true);
-        mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(mActivity);
+        int mapMode = settings.getInt("map_options", R.id.map_option1);
+        switch(mapMode)
+		{
+			case R.id.map_option1:
+				setMapType(GoogleMap.MAP_TYPE_NORMAL);
+				break;
+			case R.id.map_option2:
+				setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+				break;
+		}
         mMap.setTrafficEnabled(true);
         
      	// Acquire a reference to the system Location Manager

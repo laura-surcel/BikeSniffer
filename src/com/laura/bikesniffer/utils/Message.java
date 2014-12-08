@@ -30,6 +30,7 @@ public class Message
        {
     	   	this.id = object.getLong("id");
             this.senderId = object.getString("sender_id");
+            this.senderName = object.getString("sender_name");
             this.type = object.getInt("type");
        } 
        catch (JSONException e) 
@@ -45,6 +46,7 @@ public class Message
     	{
 			json.put("id", id);
 			json.put("sender_id", senderId);
+			json.put("sender_name", senderName);
 			json.put("type", type);
 		} 
     	catch (JSONException e) 

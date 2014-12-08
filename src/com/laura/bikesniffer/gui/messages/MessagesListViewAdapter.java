@@ -49,7 +49,7 @@ public class MessagesListViewAdapter extends ArrayAdapter<Message>
     	TextView userName = vh.userName;
     	TextView tvMessage = vh.message;
     	// Populate the data into the template view using the data object
-    	userName.setText(message.senderId);
+    	userName.setText(message.senderName);
     	
     	switch(message.type)
     	{

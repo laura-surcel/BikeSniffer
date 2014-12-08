@@ -1,12 +1,10 @@
 package com.laura.bikesniffer.gui;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
 import android.text.Editable;
@@ -20,7 +18,6 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
@@ -29,11 +26,11 @@ import android.widget.TextView;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.laura.bikesniffer.R;
+import com.laura.bikesniffer.online.SetNameRequest;
 
 public class SettingsFragment extends Fragment 
 {
 	private static final String ARG_SECTION_NUMBER = "section_number";
-	private static final String PREFS_NAME = "bike_sniffer_prefs";
     private static SettingsFragment sInstance;
     
     private ActionBarActivity mActivity;
@@ -60,11 +57,16 @@ public class SettingsFragment extends Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) 
 	{
-    	SharedPreferences settings = getActivity().getSharedPreferences(PREFS_NAME, 0);
+    	SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(mActivity);
         
     	mRootView = inflater.inflate(R.layout.settings_layout, container, false);
     	nameEditor = (EditText)mRootView.findViewById(R.id.editName);
+    	Log.d("PREFS", settings.getString("biker_name", ""));
     	
+    	name = settings.getString("biker_name", "");
+    	nameEditor.setText(name);
+        mActivity.setTitle("Welcome, " + name);
+        
     	nameEditor.setOnEditorActionListener(new TextView.OnEditorActionListener() {
 			@Override
 			public boolean onEditorAction(TextView arg0, int actionId, KeyEvent arg2) {
@@ -73,9 +75,12 @@ public class SettingsFragment extends Fragment
 					if(name != "")
 					{
 						mActivity.setTitle("Welcome, " + name);		
-						SharedPreferences settings = getActivity().getSharedPreferences(PREFS_NAME, 0);
-						settings.edit().putString("biker_name", "" + name);
-						settings.edit().commit();
+						SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(mActivity);
+						SharedPreferences.Editor edit = settings.edit();
+						edit.putString("biker_name", "" + name);
+						edit.commit();
+						Log.d("SAVE", name + "");
+						new SetNameRequest(mActivity, name + "").execute();
 					}
     	        }
 				nameEditor.setText(name);
@@ -105,15 +110,18 @@ public class SettingsFragment extends Fragment
     	
     	mMapSettings = (RadioGroup)mRootView.findViewById(R.id.mapOptionsGroup);
     	mMapSettings.check(settings.getInt("map_options", R.id.map_option1));
+    	Log.d("PREFS", "" + settings.getInt("map_options", R.id.map_option1));
     	
     	mMapSettings.setOnCheckedChangeListener(new OnCheckedChangeListener() 
     	{
 			@Override
 			public void onCheckedChanged(RadioGroup group, int checkedId) 
 			{
-				SharedPreferences settings = getActivity().getSharedPreferences(PREFS_NAME, 0);
-				settings.edit().putInt("map_options", checkedId);
-				settings.edit().commit();
+				SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(mActivity);
+				SharedPreferences.Editor edit = settings.edit();
+				edit.putInt("map_options", checkedId);
+				edit.commit();
+				Log.d("SAVE", checkedId + "");
 				
 				switch(checkedId)
 				{
@@ -133,9 +141,11 @@ public class SettingsFragment extends Fragment
 			@Override
 			public void onItemSelected(AdapterView<?> arg0, View arg1,
 					int arg2, long arg3) {
-				SharedPreferences settings = getActivity().getSharedPreferences(PREFS_NAME, 0);
-				settings.edit().putInt("radius_options", arg2);
-				settings.edit().commit();
+				SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(mActivity);
+				SharedPreferences.Editor edit = settings.edit();
+				edit.putInt("radius_options", arg2);
+				edit.commit();
+				Log.d("SAVE", arg2 + "");
 			}
 
 			@Override
@@ -144,6 +154,7 @@ public class SettingsFragment extends Fragment
 			}
     		
 		});
+    	Log.d("PREFS", "" + settings.getInt("radius_options", 0));
     	mRadiusSpinner.setSelection(settings.getInt("radius_options", 0));
         return mRootView;
     }
