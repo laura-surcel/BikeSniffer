@@ -5,8 +5,9 @@ import com.google.android.gms.maps.model.*;
 public class GeoPosition
 {
 	private LatLng latLng;
-	
+
 	public String userId;
+	public String userName;
 	
 	public GeoPosition(LatLng latLng)
 	{

@@ -214,6 +214,7 @@ public class BikesFragment extends Fragment
     		LatLng loc = new LatLng(gp.getLatitude(), gp.getLongitude());
     		Marker marker = mMap.addMarker(new MarkerOptions().position(loc));
     		UsersManager.getInstance().addUserIdForMarker(gp.userId, marker);
+    		UsersManager.getInstance().addUserNameForMarker(gp.userName, marker);
     	}
     }
     

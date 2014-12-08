@@ -8,7 +8,8 @@ public class UsersManager
 {
 	private static UsersManager mInstance = null;
 	private HashMap<String, Marker> mMarkers = null;
-	private HashMap<String,String> mMarkersToUsers = null;
+	private HashMap<String, String> mMarkersToUsers = null;
+	private HashMap<String, String> mMarkersToUsersName = null;
 	
 	public static UsersManager getInstance()
 	{
@@ -22,18 +23,26 @@ public class UsersManager
 	private UsersManager()
 	{
 		mMarkersToUsers = new HashMap<String, String>();
+		mMarkersToUsersName = new HashMap<String, String>();
 		mMarkers = new HashMap<String, Marker>();
 	}
 	
 	public void clearHistory()
 	{
 		mMarkersToUsers.clear();
+		mMarkersToUsersName.clear();
 		mMarkers.clear();
 	}
 	
 	public void addUserIdForMarker(String userId, Marker marker)
 	{
 		mMarkersToUsers.put(marker.getId(), userId);
+		mMarkers.put(marker.getId(), marker);
+	}
+	
+	public void addUserNameForMarker(String userName, Marker marker)
+	{
+		mMarkersToUsersName.put(marker.getId(), userName);
 		mMarkers.put(marker.getId(), marker);
 	}
 	
@@ -44,6 +53,6 @@ public class UsersManager
 	
 	public String getUserNameForMarkerId(String id)
 	{
-		return "Biker";
+		return mMarkersToUsersName.get(id);
 	}
 }

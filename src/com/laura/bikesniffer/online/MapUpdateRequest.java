@@ -71,6 +71,7 @@ public class MapUpdateRequest extends HttpAsyncRequest
 	 	       		JSONObject obj = array.getJSONObject(i);
 	 	       		GeoPosition gp = new GeoPosition(new LatLng(obj.getDouble("lat"), obj.getDouble("longit")));
 	 	       		gp.userId = obj.getString("id");
+	 	       		gp.userName = obj.getString("name");
 	 	       		locations.add(gp);
 	 	       	}
 	 	       	return body;
