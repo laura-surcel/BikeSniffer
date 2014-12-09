@@ -16,6 +16,7 @@ import android.view.animation.Animation.AnimationListener;
 import android.view.animation.Transformation;
 
 import com.laura.bikesniffer.gui.MainActivity;
+import com.laura.bikesniffer.online.AcceptMeetingRequest;
 import com.laura.bikesniffer.online.MessageRetrieverTask;
 import com.laura.bikesniffer.online.RemoveMessagesRequest;
 import com.laura.bikesniffer.utils.Message;
@@ -104,9 +105,6 @@ public class MessagesFragment extends ListFragment
 				{
 					mMessagesList.remove(m);
 					mAdapter.remove(m);
-					List<Long> list = new Vector<Long>();
-					list.add(Long.valueOf(m.id));
-					new RemoveMessagesRequest(getActivity(), list).execute();
 				}
 				
 				MessageViewHolder vh = (MessageViewHolder)view.getTag();
@@ -121,6 +119,18 @@ public class MessagesFragment extends ListFragment
 		};
 		
 		collapse(view, al);
+	}
+	
+	public void performRemoveRequest(long messageId)
+	{
+		List<Long> list = new Vector<Long>();
+		list.add(Long.valueOf(messageId));
+		new RemoveMessagesRequest(getActivity(), list).execute();
+	}
+	
+	public void performAcceptRequest(String senderId, long messageId)
+	{
+		new AcceptMeetingRequest(getActivity(), senderId, messageId).execute();
 	}
 	
 	private void collapse(final View v, AnimationListener al) 

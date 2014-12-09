@@ -6,14 +6,18 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.google.android.gms.maps.model.LatLng;
+
 
 import android.util.Log;
 
 public class Meeting 
 {
+	public long id;
 	public String userName;
 	public String userId;
 	public GeoPosition location;
+	public int type;
 
     public Meeting(String userName, String userId, GeoPosition gp) 
     {
@@ -26,13 +30,26 @@ public class Meeting
     public Meeting(JSONObject object)
     {
        try 
-       {
-    	   	this.userName = object.getString("user_name");
-            this.userId = object.getString("user_id");
+       {	
+    	   	this.id = object.getLong("id");
+    	   	this.userName = object.getString("interrogator_name");
+            this.userId = object.getString("interrogator_id");
+            this.location = new GeoPosition(new LatLng(object.getDouble("lat"), object.getDouble("longit")));
+            this.type = 1;
        } 
        catch (JSONException e) 
        {
-            e.printStackTrace();
+    	   try 
+    	   {
+    		   this.userName = object.getString("interrogated_name");
+    		   this.userId = object.getString("interrogated_id");
+               this.location = new GeoPosition(new LatLng(object.getDouble("lat"), object.getDouble("longit")));
+               this.type = 2;
+    	   } 
+    	   catch (JSONException e1) 
+    	   {
+    		   e1.printStackTrace();
+    	   }
        }
     }
     
@@ -53,21 +70,21 @@ public class Meeting
 
     // Factory method to convert an array of JSON objects into a list of objects
     // User.fromJson(jsonArray);
-    public static ArrayList<Message> fromJson(JSONArray jsonObjects) 
+    public static ArrayList<Meeting> fromJson(JSONArray jsonObjects) 
     {
-           ArrayList<Message> messages = new ArrayList<Message>();
+           ArrayList<Meeting> meetings = new ArrayList<Meeting>();
            for (int i = 0; i < jsonObjects.length(); i++) 
            {
                try 
                {
-            	   Log.d("MEETINGS", jsonObjects.getJSONObject(i).getString("user_id"));
-            	   messages.add(new Message(jsonObjects.getJSONObject(i)));
+            	   Log.d("MEETINGS", jsonObjects.getJSONObject(i).getString("sender_id"));
+            	   meetings.add(new Meeting(jsonObjects.getJSONObject(i)));
                } 
                catch (JSONException e) 
                {
                   e.printStackTrace();
                }
           }
-          return messages;
+          return meetings;
     }
 }

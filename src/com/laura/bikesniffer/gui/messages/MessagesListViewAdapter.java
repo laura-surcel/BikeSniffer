@@ -74,7 +74,8 @@ public class MessagesListViewAdapter extends ArrayAdapter<Message>
 			public void onClick(View view) 
 			{
 				long messageId = Long.parseLong(view.getContentDescription().toString());
-				MessagesFragment.getInstance(1).removeMessage(finalView, messageId);				
+				MessagesFragment.getInstance(1).removeMessage(finalView, messageId);
+				MessagesFragment.getInstance(1).performRemoveRequest(messageId);
 			}
 		});
     	
@@ -90,9 +91,10 @@ public class MessagesListViewAdapter extends ArrayAdapter<Message>
 					JSONObject reconstructed = new JSONObject(view.getContentDescription().toString());
 					long messageId = reconstructed.getLong("id");
 					String senderId = reconstructed.getString("sender_id");
-					BikesFragment.getInstance(0).getFocus();
-					BikesFragment.getInstance(0).getRouteToUser(senderId);
+					//BikesFragment.getInstance(0).getFocus();
+					//BikesFragment.getInstance(0).getRouteToUser(senderId);
 					MessagesFragment.getInstance(1).removeMessage(finalView, messageId);
+					MessagesFragment.getInstance(1).performAcceptRequest(senderId, messageId);
 				} 
 				catch (JSONException e) 
 				{

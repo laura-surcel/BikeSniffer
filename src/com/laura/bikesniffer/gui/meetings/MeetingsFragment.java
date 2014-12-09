@@ -9,8 +9,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.laura.bikesniffer.gui.MainActivity;
 import com.laura.bikesniffer.utils.GeoPosition;
 import com.laura.bikesniffer.utils.Meeting;
+import com.laura.bikesniffer.utils.Message;
 
 public class MeetingsFragment extends ListFragment  
 {
@@ -53,4 +55,31 @@ public class MeetingsFragment extends ListFragment
         
         return super.onCreateView(inflater, container, savedInstanceState);
     }
+    
+    public void addMeetings(ArrayList<Meeting> meetings)
+	{
+		ArrayList<Meeting> newOnes = new ArrayList<Meeting>();
+		for(Meeting m:meetings)
+		{			
+			if(!meetingExists(m))
+			{
+				mMeetingsList.add(m);
+				newOnes.add(m);
+			}
+		}
+		mAdapter.addAll(newOnes);
+		// ((MainActivity)getActivity()).addNewMessagesNumber(newOnes.size());
+	}
+	
+	private boolean meetingExists(Meeting m)
+	{
+		for(Meeting mm:mMeetingsList)
+		{
+			if(m.id == mm.id)
+			{
+				return true;
+			}
+		}
+		return false;
+	}
 }
