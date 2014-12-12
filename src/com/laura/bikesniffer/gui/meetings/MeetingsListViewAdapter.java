@@ -13,6 +13,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.laura.bikesniffer.R;
+import com.laura.bikesniffer.gui.MeetingsMapFragment;
 import com.laura.bikesniffer.utils.Meeting;
 
 public class MeetingsListViewAdapter extends ArrayAdapter<Meeting> 
@@ -57,6 +58,8 @@ public class MeetingsListViewAdapter extends ArrayAdapter<Meeting>
 			{
 				String userId = (String) view.getContentDescription();
 				Log.d("MEETINGS", userId);
+				MeetingsMapFragment.getInstance(4).getFocus();
+				MeetingsMapFragment.getInstance(4).getRouteToUser(userId);
 			}
 		});
     	

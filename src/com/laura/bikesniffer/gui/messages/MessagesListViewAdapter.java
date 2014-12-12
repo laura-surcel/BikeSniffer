@@ -15,7 +15,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.laura.bikesniffer.R;
-import com.laura.bikesniffer.gui.BikesFragment;
+import com.laura.bikesniffer.gui.MeetingsMapFragment;
 import com.laura.bikesniffer.utils.Message;
 
 public class MessagesListViewAdapter extends ArrayAdapter<Message> 
@@ -91,8 +91,8 @@ public class MessagesListViewAdapter extends ArrayAdapter<Message>
 					JSONObject reconstructed = new JSONObject(view.getContentDescription().toString());
 					long messageId = reconstructed.getLong("id");
 					String senderId = reconstructed.getString("sender_id");
-					//BikesFragment.getInstance(0).getFocus();
-					//BikesFragment.getInstance(0).getRouteToUser(senderId);
+					MeetingsMapFragment.getInstance(4).getFocus();
+					MeetingsMapFragment.getInstance(4).getRouteToUser(senderId);
 					MessagesFragment.getInstance(1).removeMessage(finalView, messageId);
 					MessagesFragment.getInstance(1).performAcceptRequest(senderId, messageId);
 				} 

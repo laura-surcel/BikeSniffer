@@ -11,7 +11,7 @@ import android.os.AsyncTask;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolylineOptions;
-import com.laura.bikesniffer.gui.BikesFragment;
+import com.laura.bikesniffer.gui.MeetingsMapFragment;
 
 public class ParserTask extends AsyncTask<String, Integer, List<List<HashMap<String,String>>>> 
 {
@@ -69,6 +69,6 @@ public class ParserTask extends AsyncTask<String, Integer, List<List<HashMap<Str
         }
 
         // Drawing polyline in the Google Map for the i-th route
-        BikesFragment.getInstance(0).showDirections(lineOptions);
+        MeetingsMapFragment.getInstance(4).showDirections(lineOptions);
     }
 }

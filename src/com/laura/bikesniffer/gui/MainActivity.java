@@ -63,7 +63,7 @@ public class MainActivity extends ActionBarActivity
 		mViewPager = (ViewPager) findViewById(R.id.pager);
 		mViewPager.setAdapter(mSectionsPagerAdapter);
 		mViewPager.setPageTransformer(true, new DepthPageTransformer());
-		mViewPager.setOffscreenPageLimit(4);
+		mViewPager.setOffscreenPageLimit(5);
 		
 		 // Specify that tabs should be displayed in the action bar.
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
@@ -86,10 +86,10 @@ public class MainActivity extends ActionBarActivity
 	        }
 	    };
 	    
-	    int[] icons = {R.drawable.bike, R.drawable.meetings, R.drawable.message, R.drawable.settings};
+	    int[] icons = {R.drawable.bike, R.drawable.meetings, R.drawable.message, R.drawable.settings, R.drawable.bike};
 
 	    // Add 3 tabs, specifying the tab's text and TabListener
-	    for (int i = 0; i < 4; i++) {
+	    for (int i = 0; i < 5; i++) {
 	        actionBar.addTab(
 	                actionBar.newTab()
 	                        .setIcon(icons[i])
@@ -211,6 +211,9 @@ public class MainActivity extends ActionBarActivity
 			case 3:
 				mCurrentFragment = SettingsFragment.getInstance(position);
 				break;
+			case 4:
+				mCurrentFragment = MeetingsMapFragment.getInstance(position);
+				break;
 			}
 			return mCurrentFragment;
 		}
@@ -218,8 +221,7 @@ public class MainActivity extends ActionBarActivity
 		@Override
 		public int getCount() 
 		{
-			// Show 3 total pages.
-			return 4;
+			return 5;
 		}
 
 		@Override
@@ -234,6 +236,8 @@ public class MainActivity extends ActionBarActivity
 			case 2:
 				return getString(R.string.title_section3).toUpperCase(l);
 			case 3:
+				return getString(R.string.title_section3).toUpperCase(l);
+			case 4:
 				return getString(R.string.title_section3).toUpperCase(l);
 			}
 			return null;

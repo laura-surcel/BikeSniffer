@@ -1,6 +1,5 @@
 package com.laura.bikesniffer.gui;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
@@ -24,17 +23,13 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMyLocationButtonClickListener;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.PolylineOptions;
 import com.laura.bikesniffer.R;
-import com.laura.bikesniffer.online.DownloadTask;
-import com.laura.bikesniffer.online.LocateUserRequest;
 import com.laura.bikesniffer.online.MapUpdateRequest;
 import com.laura.bikesniffer.utils.GeoPosition;
 import com.laura.bikesniffer.utils.UsersManager;
@@ -123,47 +118,6 @@ public class BikesFragment extends Fragment
         return mRootView;
     }
     
-    ArrayList<LatLng> markerPoints = new ArrayList<LatLng>();
-    public void setupDirections()
-    {
-    	mMap.setOnMapClickListener(new OnMapClickListener() {
-
-    	        @Override
-    	        public void onMapClick(LatLng point) {
-
-    	            if(markerPoints.size()>1){
-    	                markerPoints.clear();
-    	                mMap.clear();
-    	            }
-
-    	            markerPoints.add(point);
-
-    	            MarkerOptions options = new MarkerOptions();
-
-    	            options.position(point);
-
-    	            if(markerPoints.size()==1){
-    	                   options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
-    	            }else if(markerPoints.size()==2){
-    	                options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
-    	            }
-
-    	            mMap.addMarker(options);
-
-    	            if(markerPoints.size() >= 2){
-    	                LatLng origin = markerPoints.get(0);
-    	                LatLng dest = markerPoints.get(1);
-
-    	                String url = getDirectionsUrl(origin, dest);
-
-    	                DownloadTask downloadTask = new DownloadTask();
-
-    	                downloadTask.execute(url);
-    	            }
-    	        }
-    	    });
-    }
-    
     public final void makeUseOfNewLocation(Location location) 
     {
     	LatLng loc = new LatLng(location.getLatitude(), location.getLongitude());
@@ -249,26 +203,6 @@ public class BikesFragment extends Fragment
     	((MainActivity)mActivity).selectTab(0);
     }
     
-    public void getRouteToUser(String userId)
-    {
-    	Log.d("ROUTES", "getRouteToUser " + userId);
-    	new LocateUserRequest(mActivity, userId).execute();
-    }
-    
-    public void showRouteToUser(double lat, double longit)
-    {
-    	if(mPrevPosition == null)
-    		return;
-    				
-    	Log.d("ROUTES", "showRouteToUser");
-    	LatLng origin = new LatLng(mPrevPosition.getLatitude(), mPrevPosition.getLongitude());
-        LatLng dest = new LatLng(lat, longit);
-        
-    	String url = getDirectionsUrl(origin, dest);
-        DownloadTask downloadTask = new DownloadTask();
-        downloadTask.execute(url);
-    }
-    
     private void setUpMapIfNeeded() 
     {
         // Do a null check to confirm that we have not already instantiated the map.
@@ -346,36 +280,5 @@ public class BikesFragment extends Fragment
         // Register the listener with the Location Manager to receive location updates
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
-    }
-    
-    private String getDirectionsUrl(LatLng origin,LatLng dest)
-    {
-        // Origin of route
-        String str_origin = "origin="+origin.latitude+","+origin.longitude;
-
-        // Destination of route
-        String str_dest = "destination="+dest.latitude+","+dest.longitude;
-
-        // Sensor enabled
-        String sensor = "sensor=false";
-
-        // Building the parameters to the web service
-        String parameters = str_origin+"&"+str_dest+"&"+sensor;
-
-        // parameters = parameters + "&" + "mode=walking"; 
-        
-        // Output format
-        String output = "json";
-
-        String url = "https://maps.googleapis.com/maps/api/directions/"+output+"?"+parameters;
-        
-        Log.d("ROUTES", url);
-        
-        return url;
-    }
-    
-    public void showDirections(PolylineOptions lineOptions)
-    {
-    	mMap.addPolyline(lineOptions);
     }
 }

@@ -13,7 +13,7 @@ import org.json.JSONObject;
 import android.content.Context;
 import android.util.Log;
 
-import com.laura.bikesniffer.gui.BikesFragment;
+import com.laura.bikesniffer.gui.MeetingsMapFragment;
 
 public class LocateUserRequest extends HttpAsyncRequest 
 {
@@ -78,7 +78,7 @@ public class LocateUserRequest extends HttpAsyncRequest
 	{
 		if (code == HttpURLConnection.HTTP_OK) 
 		{
-			BikesFragment.getInstance(0).showRouteToUser(lat, longit);
+			MeetingsMapFragment.getInstance(4).showRouteToUser(lat, longit);
 		}
 	}
 }

@@ -8,9 +8,6 @@ import org.json.JSONObject;
 
 import com.google.android.gms.maps.model.LatLng;
 
-
-import android.util.Log;
-
 public class Meeting 
 {
 	public long id;
@@ -77,7 +74,6 @@ public class Meeting
            {
                try 
                {
-            	   Log.d("MEETINGS", jsonObjects.getJSONObject(i).getString("sender_id"));
             	   meetings.add(new Meeting(jsonObjects.getJSONObject(i)));
                } 
                catch (JSONException e) 

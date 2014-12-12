@@ -2,17 +2,16 @@ package com.laura.bikesniffer.gui.meetings;
 
 import java.util.ArrayList;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.android.gms.maps.model.LatLng;
-import com.laura.bikesniffer.gui.MainActivity;
-import com.laura.bikesniffer.utils.GeoPosition;
+import com.laura.bikesniffer.online.MeetingsRetrieverTask;
 import com.laura.bikesniffer.utils.Meeting;
-import com.laura.bikesniffer.utils.Message;
 
 public class MeetingsFragment extends ListFragment  
 {
@@ -21,6 +20,8 @@ public class MeetingsFragment extends ListFragment
     
     private MeetingsListViewAdapter mAdapter;
     private ArrayList<Meeting> mMeetingsList;
+    private MeetingsRetrieverTask mMeetingsRetriever;
+	private ActionBarActivity mActivity;
     
     public static MeetingsFragment getInstance(int sectionNumber) 
 	{
@@ -45,16 +46,26 @@ public class MeetingsFragment extends ListFragment
         setListAdapter(mAdapter);
         
         mMeetingsList = new ArrayList<Meeting>();
-        for(int i = 0; i < 10; ++i)
-        {
-        	mMeetingsList.add(new Meeting("Laura", "6bd", new GeoPosition(new LatLng(23.21, 45.12))));
-        }
+        mAdapter.addAll(mMeetingsList);
         
         // listen for new messages
-        mAdapter.addAll(mMeetingsList);
+        startMessageRetriever();
         
         return super.onCreateView(inflater, container, savedInstanceState);
     }
+    
+    @Override
+    public void onAttach(Activity activity) 
+    {
+        super.onAttach(activity);
+        mActivity = (ActionBarActivity)activity;
+    }
+    
+    void startMessageRetriever()
+	{
+    	mMeetingsRetriever = new MeetingsRetrieverTask(mActivity, this);
+    	mMeetingsRetriever.startRepeatingTask();
+	}
     
     public void addMeetings(ArrayList<Meeting> meetings)
 	{
