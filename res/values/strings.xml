@@ -18,11 +18,21 @@
 	<string name="radius_intro">Radius to search bikers</string>
 	<string name="choose_radius">Choose radius</string>
 	<string-array name="radius_array">
+        <item>5 km</item>
         <item>10 km</item>
+        <item>20 km</item>
         <item>30 km</item>
         <item>50 km</item>
-        <item>100 km</item>
-        <item>1000 km</item>
-        <item>> 1000 km</item>
+        <item>>100 km</item>
+    </string-array>
+    <string name="expiration_intro">Meetings lifetime</string>
+	<string name="choose_expiration">Choose radius</string>
+	<string-array name="expiration_array">
+        <item>10 min</item>
+        <item>20 min</item>
+        <item>30 min</item>
+        <item>1 hour</item>
+        <item>2 hours</item>
+        <item>3 hours</item>
     </string-array>
 </resources>

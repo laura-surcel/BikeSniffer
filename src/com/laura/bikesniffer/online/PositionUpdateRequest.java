@@ -18,14 +18,15 @@ import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.laura.bikesniffer.gui.BikesFragment;
+import com.laura.bikesniffer.gui.MainActivity;
 import com.laura.bikesniffer.utils.GeoPosition;
 
-public class MapUpdateRequest extends HttpAsyncRequest
+public class PositionUpdateRequest extends HttpAsyncRequest
 {
 	private BikesFragment map;
 	private List<GeoPosition> locations;
 	
-	public MapUpdateRequest(Context c, BikesFragment m)
+	public PositionUpdateRequest(Context c, BikesFragment m)
 	{
 		super(c);
 		this.map = m;
@@ -44,9 +45,13 @@ public class MapUpdateRequest extends HttpAsyncRequest
  	        // Body
  	        JSONObject json = new JSONObject();
  			GeoPosition pos = map.getPosition();
+ 			
+ 			if(pos == null)
+ 				return "";
+ 			
  			json.put("lat", pos.getLatitude());
  			json.put("longit", pos.getLongitude());
- 			json.put("radius", 100);
+ 			json.put("radius", ((MainActivity)context).getSearchRadius());
  			json.put("deviceId", deviceId);
  			
  			// Send
@@ -92,6 +97,9 @@ public class MapUpdateRequest extends HttpAsyncRequest
 	protected void onPostExecute(Object obj)
 	{
 		Log.d("MapUpdater", obj.toString());
-		map.populateMapWithLocations(locations);
+		if(!obj.toString().equalsIgnoreCase(""))
+		{
+			map.populateMapWithLocations(locations);
+		}
 	}
 }

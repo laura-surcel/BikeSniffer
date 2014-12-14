@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -26,11 +27,13 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMyLocationButtonClickListener;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.laura.bikesniffer.R;
-import com.laura.bikesniffer.online.MapUpdateRequest;
+import com.laura.bikesniffer.online.PositionUpdateTask;
 import com.laura.bikesniffer.utils.GeoPosition;
 import com.laura.bikesniffer.utils.UsersManager;
 
@@ -38,7 +41,7 @@ import com.laura.bikesniffer.utils.UsersManager;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class BikesFragment extends Fragment 
+public class BikesFragment extends Fragment implements Configuration 
 {
     /**
      * The fragment argument representing the section number for this
@@ -54,6 +57,11 @@ public class BikesFragment extends Fragment
 	private static BikesFragment sInstance;
 	private View mRootView;
 	private ViewGroup mPrevContainer;
+	private Marker mPrevMarker; 
+	private Circle mPrevCircle;
+	private PositionUpdateTask mPositionUpdater;
+	private List<GeoPosition> mPrevLocations;
+	private boolean zoomIn = true;
 	
     /**
      * Returns a new instance of this fragment for the given section
@@ -123,13 +131,33 @@ public class BikesFragment extends Fragment
     	LatLng loc = new LatLng(location.getLatitude(), location.getLongitude());
     	GeoPosition gp = new GeoPosition(loc);
     	    	
-    	if( mPrevPosition == null || gp.getDistanceInKmFrom(mPrevPosition) > 0.5)
+    	if( mPrevPosition == null || gp.getDistanceInKmFrom(mPrevPosition) > LOCATION_TOLERANCE)
     	{
-    		Marker marker = mMap.addMarker(new MarkerOptions().position(loc));
-    		marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_launcher));
+    		if (mPrevMarker != null)
+    		{
+    			mPrevMarker.remove();
+    		}
     		
-            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(loc, 16.0f));            
+    		mPrevMarker = mMap.addMarker(new MarkerOptions().position(loc));
+    		mPrevMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.my_bike));        
             mPrevPosition = gp;
+                    	
+        	// Instantiates a new CircleOptions object and defines the center and radius
+            CircleOptions circleOptions = new CircleOptions()
+                .center(new LatLng(location.getLatitude(), location.getLongitude()))
+                .radius(((MainActivity)mActivity).getSearchRadius() * 1000)
+                .fillColor(CIRCLE_COLOR)
+                .strokeColor(Color.TRANSPARENT)
+                .zIndex(10); // In meters
+
+            // Get back the mutable Circle
+            mPrevCircle = mMap.addCircle(circleOptions);
+            
+            if(zoomIn)
+            {
+            	zoomIn = false;
+            	mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(loc, ZOOM_OUT));
+            }
     	}        
     }    
     
@@ -140,35 +168,57 @@ public class BikesFragment extends Fragment
     		mMap.setMapType(type);
     	}
     }
-    
-	public void refreshLocation()
-    {
-    	Log.d("LOCATION", "Refresh");
-    	new MapUpdateRequest(mActivity, this).execute();
-    }
 	    
     public void populateMapWithLocations(List<GeoPosition> locations)
     {
     	if(mMap != null)
     	{
-    		mMap.clear();
-    		UsersManager.getInstance().clearHistory();
-    	}
-    	
-    	if (mPrevPosition != null)
-    	{
-    		LatLng loc = new LatLng(mPrevPosition.getLatitude(), mPrevPosition.getLongitude());
-        	Marker marker = mMap.addMarker(new MarkerOptions().position(loc));
-    		marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_launcher));
-    	}
-		
-    	for(int i = 0; i < locations.size(); ++i)
-    	{
-    		GeoPosition gp = locations.get(i);
-    		LatLng loc = new LatLng(gp.getLatitude(), gp.getLongitude());
-    		Marker marker = mMap.addMarker(new MarkerOptions().position(loc));
-    		UsersManager.getInstance().addUserIdForMarker(gp.userId, marker);
-    		UsersManager.getInstance().addUserNameForMarker(gp.userName, marker);
+        	for(int i = 0; i < locations.size(); ++i)
+        	{
+        		GeoPosition gp = locations.get(i);
+        		Marker prevMarker = UsersManager.getInstance().getMarkerForUserId(gp.userId);
+        		LatLng loc = new LatLng(gp.getLatitude(), gp.getLongitude());
+        		
+        		// if it wasn't before => add it
+        		if(prevMarker == null)
+        		{
+        			Marker marker = mMap.addMarker(new MarkerOptions().position(loc));
+            		marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.their_bike));
+            		UsersManager.getInstance().addUserIdForMarker(gp.userId, marker);
+            		UsersManager.getInstance().addUserNameForMarker(gp.userName, marker);
+        		}
+        		// if it changed location => update it
+        		else if(gp.getDistanceInKmFrom(new GeoPosition(prevMarker.getPosition())) > LOCATION_TOLERANCE)
+        		{
+        			prevMarker.setPosition(loc);
+        		}
+        	} 
+    		
+        	if(mPrevLocations != null)
+        	{
+        		for(int i = 0; i < mPrevLocations.size(); ++i)
+        		{
+        			GeoPosition gp = mPrevLocations.get(i);
+            		Marker prevMarker = UsersManager.getInstance().getMarkerForUserId(gp.userId);
+            		boolean exists = false;
+            				
+            		for(int j = 0; j < locations.size(); ++j)
+            		{
+            			if(locations.get(j).userId.equalsIgnoreCase(gp.userId))
+            			{
+            				exists = true;
+            				break;
+            			}
+            		}
+            		
+            		if(!exists)
+            		{
+            			prevMarker.remove();
+            		}
+        		}
+        	}
+        	
+        	mPrevLocations = locations;
     	}
     }
     
@@ -203,6 +253,14 @@ public class BikesFragment extends Fragment
     	((MainActivity)mActivity).selectTab(0);
     }
     
+    public void onSearchRadiusChanged()
+    {
+    	if (mPrevCircle != null)
+    	{
+    		mPrevCircle.setRadius(((MainActivity)mActivity).getSearchRadius() * 1000);
+    	}
+    }
+    
     private void setUpMapIfNeeded() 
     {
         // Do a null check to confirm that we have not already instantiated the map.
@@ -218,6 +276,7 @@ public class BikesFragment extends Fragment
             	mMarkerHandler = new MarkerHandler(mRootView, mActivity, mMap);
             	mMarkerHandler.init();
                 setUpMap();
+                startPositionUpdater();
             }
         }
     }
@@ -250,8 +309,8 @@ public class BikesFragment extends Fragment
         {
             public void onLocationChanged(Location location) 
             {
-              // Called when a new location is found by the network location provider.
-              makeUseOfNewLocation(location);
+            	// Called when a new location is found by the network location provider.
+            	makeUseOfNewLocation(location);
             }
 
             public void onStatusChanged(String provider, int status, Bundle extras) {}
@@ -270,7 +329,7 @@ public class BikesFragment extends Fragment
                     if(mPrevPosition != null)
                 	{
                     	LatLng loc = new LatLng(mPrevPosition.getLatitude(), mPrevPosition.getLongitude());
-                    	mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(loc, 16.0f));
+                    	mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(loc, ZOOM_OUT));
                 	}
                     return true;
                 }
@@ -281,4 +340,10 @@ public class BikesFragment extends Fragment
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
     }
+    
+    private void startPositionUpdater()
+	{
+    	mPositionUpdater = new PositionUpdateTask(mActivity);
+    	mPositionUpdater.startRepeatingTask();
+	}
 }

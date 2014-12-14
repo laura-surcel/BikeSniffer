@@ -33,7 +33,7 @@ import com.laura.bikesniffer.online.DownloadTask;
 import com.laura.bikesniffer.online.LocateUserRequest;
 import com.laura.bikesniffer.utils.GeoPosition;
 
-public class MeetingsMapFragment extends Fragment
+public class MeetingsMapFragment extends Fragment implements Configuration
 {
 	/**
      * The fragment argument representing the section number for this
@@ -48,6 +48,7 @@ public class MeetingsMapFragment extends Fragment
 	private static MeetingsMapFragment sInstance;
 	private View mRootView;
 	private ViewGroup mPrevContainer;
+	private Marker mPrevMarker; 
 	
     /**
      * Returns a new instance of this fragment for the given section
@@ -198,7 +199,7 @@ public class MeetingsMapFragment extends Fragment
                     if(mPrevPosition != null)
                 	{
                     	LatLng loc = new LatLng(mPrevPosition.getLatitude(), mPrevPosition.getLongitude());
-                    	mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(loc, 16.0f));
+                    	mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(loc, 12.0f));
                 	}
                     return true;
                 }
@@ -215,12 +216,17 @@ public class MeetingsMapFragment extends Fragment
     	LatLng loc = new LatLng(location.getLatitude(), location.getLongitude());
     	GeoPosition gp = new GeoPosition(loc);
     	    	
-    	if( mPrevPosition == null || gp.getDistanceInKmFrom(mPrevPosition) > 0.5)
+    	if( mPrevPosition == null || gp.getDistanceInKmFrom(mPrevPosition) > LOCATION_TOLERANCE)
     	{
-    		Marker marker = mMap.addMarker(new MarkerOptions().position(loc));
-    		marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_launcher));
+    		if(mPrevMarker != null)
+    		{
+    			mPrevMarker.remove();
+    		}
     		
-            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(loc, 16.0f));            
+    		mPrevMarker = mMap.addMarker(new MarkerOptions().position(loc));
+    		mPrevMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.my_bike));
+    		
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(loc, ZOOM_IN));            
             mPrevPosition = gp;
     	}        
     } 
@@ -228,6 +234,10 @@ public class MeetingsMapFragment extends Fragment
     public void getRouteToUser(String userId)
     {
     	Log.d("ROUTES", "getRouteToUser " + userId);
+    	if(mMap != null)
+    	{
+    		mMap.clear();
+    	}
     	new LocateUserRequest(mActivity, userId).execute();
     }
     
@@ -239,6 +249,15 @@ public class MeetingsMapFragment extends Fragment
     	Log.d("ROUTES", "showRouteToUser");
     	LatLng origin = new LatLng(mPrevPosition.getLatitude(), mPrevPosition.getLongitude());
         LatLng dest = new LatLng(lat, longit);
+        LatLng mid = new LatLng((lat + mPrevPosition.getLatitude())/2 , (longit + mPrevPosition.getLongitude())/2);
+        
+        Marker marker = mMap.addMarker(new MarkerOptions().position(dest));
+		marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.their_bike));
+		
+		marker = mMap.addMarker(new MarkerOptions().position(origin));
+		marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.my_bike));
+		
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mid, 12.0f));
         
     	String url = getDirectionsUrl(origin, dest);
         DownloadTask downloadTask = new DownloadTask();

@@ -4,7 +4,9 @@ import java.util.Locale;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -20,12 +22,10 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.laura.bikesniffer.R;
 import com.laura.bikesniffer.gui.meetings.MeetingsFragment;
 import com.laura.bikesniffer.gui.messages.MessagesFragment;
-import com.laura.bikesniffer.online.ConnectionRequest;
 
 public class MainActivity extends ActionBarActivity 
 {
@@ -86,7 +86,18 @@ public class MainActivity extends ActionBarActivity
 	        }
 	    };
 	    
-	    int[] icons = {R.drawable.bike, R.drawable.meetings, R.drawable.message, R.drawable.settings, R.drawable.bike};
+	    mViewPager.setOnPageChangeListener(
+	            new ViewPager.SimpleOnPageChangeListener() {
+	                @Override
+	                public void onPageSelected(int position) {
+	                    // When swiping between pages, select the
+	                    // corresponding tab.
+	                    getActionBar().setSelectedNavigationItem(position);
+	                }
+	            });
+
+	    
+	    int[] icons = {R.drawable.bikes, R.drawable.meetings, R.drawable.message, R.drawable.settings, R.drawable.bikes_meet};
 
 	    // Add 3 tabs, specifying the tab's text and TabListener
 	    for (int i = 0; i < 5; i++) {
@@ -155,13 +166,7 @@ public class MainActivity extends ActionBarActivity
 		// Handle action bar item clicks here. The action bar will
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
-		if (item.getItemId() == R.id.action_example) 
-		{
-			Toast.makeText(this,"Retrieving neighbours..", Toast.LENGTH_SHORT).show();
-			BikesFragment.getInstance(0).refreshLocation();
-            return true;
-        }
-
+		
         return super.onOptionsItemSelected(item);
 	}
 
@@ -181,6 +186,28 @@ public class MainActivity extends ActionBarActivity
         }
     }
     
+	public double getSearchRadius()
+	{
+		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+		int option = settings.getInt("radius_options", 0);
+		
+		switch(option)
+		{
+		case 0:
+			return 5;
+		case 1:
+			return 10;
+		case 2:
+			return 20;
+		case 3:
+			return 30;
+		case 4:
+			return 50;
+		default:
+			return 100;
+		}
+	}
+	
 	/**
 	 * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
 	 * one of the sections/tabs/pages.
@@ -243,26 +270,4 @@ public class MainActivity extends ActionBarActivity
 			return null;
 		}
 	}
-	
-	public void onStart()
-	{
-		super.onStart();
-    	connect();
-	}
-	
-	public void onStop() 
-    {
-    	super.onStop();
-    	disconnect();
-    }
-	
-	private void connect()
-    {
-    	new ConnectionRequest(this, true).execute();
-    }
-    
-    private void disconnect()
-    {
-    	new ConnectionRequest(this, false).execute();
-    }
 }

@@ -65,7 +65,11 @@ public class SettingsFragment extends Fragment
     	
     	name = settings.getString("biker_name", "");
     	nameEditor.setText(name);
-        mActivity.setTitle("Welcome, " + name);
+    	
+    	if(!name.toString().equalsIgnoreCase(""))
+    	{
+    		mActivity.setTitle("Welcome, " + name);
+    	}
         
     	nameEditor.setOnEditorActionListener(new TextView.OnEditorActionListener() {
 			@Override
@@ -145,6 +149,7 @@ public class SettingsFragment extends Fragment
 				SharedPreferences.Editor edit = settings.edit();
 				edit.putInt("radius_options", arg2);
 				edit.commit();
+				BikesFragment.getInstance(0).onSearchRadiusChanged();
 				Log.d("SAVE", arg2 + "");
 			}
 

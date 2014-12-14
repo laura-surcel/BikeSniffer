@@ -51,6 +51,30 @@ public class UsersManager
 		return mMarkersToUsers.get(id);
 	}
 	
+	public Marker getMarkerForUserId(String id)
+	{
+		for(String markerId: mMarkersToUsers.keySet())
+		{
+			if(mMarkersToUsers.get(markerId).equalsIgnoreCase(id))
+			{
+				return mMarkers.get(markerId);
+			}
+		}
+		
+		return null;
+	}
+	
+	public void removeUser(String userId)
+	{
+		Marker m = getMarkerForUserId(userId);
+		if(m != null)
+		{
+			mMarkersToUsers.remove(m.getId());
+			mMarkersToUsersName.remove(m.getId());
+			mMarkers.remove(m.getId());
+		}
+	}
+	
 	public String getUserNameForMarkerId(String id)
 	{
 		return mMarkersToUsersName.get(id);

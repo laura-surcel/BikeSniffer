@@ -45,9 +45,11 @@ public class MeetingsListViewAdapter extends ArrayAdapter<Meeting>
     	// Lookup view for data population
     	TextView userName = vh.userName;
     	TextView location = vh.location;
+    	TextView expiration = vh.expiration;
     	// Populate the data into the template view using the data object
-    	userName.setText(meeting.userName);
+    	userName.setText("Meeting: " + meeting.userName);
     	location.setText("Location: " + meeting.location.getLatitude() + ", " + meeting.location.getLongitude());
+    	expiration.setText("Expires in: 10 minutes");
     	
     	ImageButton reject = vh.watch;
     	reject.setContentDescription("" + meeting.userId);
@@ -72,6 +74,7 @@ public class MeetingsListViewAdapter extends ArrayAdapter<Meeting>
 		MeetingViewHolder vh = new MeetingViewHolder();
 		vh.userName = (TextView)view.findViewById(R.id.biker);
 		vh.location = (TextView) view.findViewById(R.id.location);
+		vh.expiration = (TextView) view.findViewById(R.id.expiration);
 		vh.watch = (ImageButton) view.findViewById(R.id.watch);
 		vh.needInflate = false;
 		view.setTag(vh);

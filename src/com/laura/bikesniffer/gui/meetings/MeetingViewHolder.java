@@ -8,5 +8,6 @@ public class MeetingViewHolder
 	public boolean needInflate;
 	public TextView userName;
 	public TextView location;
+	public TextView expiration;
 	public ImageButton watch;
 }
